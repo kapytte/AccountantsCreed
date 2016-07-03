@@ -45,18 +45,15 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Resources\Item.cs" />
-     <Compile Include="Assets\Resources\ItemContainer.cs" />
-     <Compile Include="Assets\Resources\ItemLoader.cs" />
      <Compile Include="Assets\Scripts\CameraMovement.cs" />
-     <Compile Include="Assets\Scripts\Demo Scripts\XMLTest.cs" />
      <Compile Include="Assets\Scripts\Hex.cs" />
      <Compile Include="Assets\Scripts\MultipleChoice.cs" />
+     <Compile Include="Assets\Scripts\QuestPreview.cs" />
+     <Compile Include="Assets\Scripts\Questions.cs" />
      <Compile Include="Assets\Scripts\Tile.cs" />
      <Compile Include="Assets\Scripts\Town.cs" />
      <Compile Include="Assets\Scripts\Villager.cs" />
      <Compile Include="Assets\Scripts\WorldTime.cs" />
-     <None Include="Assets\Resources\items.xml" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>

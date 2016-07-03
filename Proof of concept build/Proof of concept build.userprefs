@@ -1,13 +1,10 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Resources\ItemContainer.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\MultipleChoice.cs">
     <Files>
-      <File FileName="Assets\Scripts\MultipleChoice.cs" Line="12" Column="27" />
-      <File FileName="Assets\Scripts\Demo Scripts\XMLTest.cs" Line="66" Column="43" />
-      <File FileName="Assets\Resources\items.xml" Line="13" Column="16" />
-      <File FileName="Assets\Resources\ItemContainer.cs" Line="26" Column="3" />
-      <File FileName="Assets\Resources\Item.cs" Line="19" Column="1" />
-      <File FileName="Assets\Resources\ItemLoader.cs" Line="15" Column="15" />
+      <File FileName="Assets\Scripts\MultipleChoice.cs" Line="72" Column="3" />
+      <File FileName="Assets\Scripts\QuestPreview.cs" Line="23" Column="3" />
+      <File FileName="Assets\Scripts\Questions.cs" Line="10" Column="3" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
