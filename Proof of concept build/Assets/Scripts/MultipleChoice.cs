@@ -81,11 +81,11 @@ public class MultipleChoice : MonoBehaviour
 
 		//resets question text to white and pulls quest info from list of questons
 		question.color = Color.white;
-		question.text = lvl1Quest[randomDraw[choiceQ]].question;
-		buttonA.text = lvl1Quest[randomDraw[choiceQ]].optionA;
-		buttonB.text = lvl1Quest[randomDraw[choiceQ]].optionB;
-		buttonC.text = lvl1Quest[randomDraw[choiceQ]].optionC;
-		buttonD.text = lvl1Quest[randomDraw[choiceQ]].optionD;
+		question.text = lvl1Quest[randomDraw[choiceQ-1]].question;
+		buttonA.text = lvl1Quest[randomDraw[choiceQ-1]].optionA;
+		buttonB.text = lvl1Quest[randomDraw[choiceQ-1]].optionB;
+		buttonC.text = lvl1Quest[randomDraw[choiceQ-1]].optionC;
+		buttonD.text = lvl1Quest[randomDraw[choiceQ-1]].optionD;
 
 		//disables quest markers
 		q1.gameObject.SetActive(false); 
@@ -94,6 +94,7 @@ public class MultipleChoice : MonoBehaviour
 		q4.gameObject.SetActive(false); 
 
 	}
+		
 
 	//called when player makes a selection in quest window
 	public void Choice()
@@ -105,13 +106,13 @@ public class MultipleChoice : MonoBehaviour
 		buttonD.GetComponentInParent<Button>().interactable = false;
 
 		//checks answer against template, if true..
-		if (decision == lvl1Quest[randomDraw[choiceQ]].answer)
+		if (decision == lvl1Quest[randomDraw[choiceQ-1]].answer)
 		{
 			//show green text and add gold & reputation 
 			question.color = Color.green;
 			question.text = "Correct";
-			goldN += lvl1Quest[randomDraw[choiceQ]].goldReward;
-			repN += lvl1Quest[randomDraw[choiceQ]].reputation;
+			goldN += lvl1Quest[randomDraw[choiceQ-1]].goldReward;
+			repN += lvl1Quest[randomDraw[choiceQ-1]].reputation;
 		}
 
 		//if false..
@@ -120,7 +121,7 @@ public class MultipleChoice : MonoBehaviour
 			//show red text and remove reputation
 			question.color = Color.red;
 			question.text = "Incorrect";
-			repN -= lvl1Quest[randomDraw[choiceQ]].reputation;
+			repN -= lvl1Quest[randomDraw[choiceQ-1]].reputation;
 		}
 
 		//enable continue button
