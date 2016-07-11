@@ -8,14 +8,19 @@ public class Tile : MonoBehaviour {
 	public string type;
 	public int resource; 
 	public float dist;
+	public GameObject caravan;
 
-	public bool available;
+	public bool available, canMouseOver;
+
+
 
 	public int c;
 
 	// Use this for initialization
 	void Start () 
 	{
+		caravan = GameObject.Find ("Caravan");
+
 		available = true;
 
 
@@ -31,6 +36,8 @@ public class Tile : MonoBehaviour {
 	void Update () 
 	{
 	
+
+
 	}
 	void ColorChange()
 	{
@@ -104,6 +111,25 @@ public class Tile : MonoBehaviour {
 		}
 
 	}
+
+	void OnMouseOver()
+	{
+
+		if (canMouseOver == true) 
+		{
+			print (gameObject.name);
+
+			if (Input.GetMouseButton (0))
+			{
+
+
+				caravan.GetComponent<NavMeshAgent> ().SetDestination (transform.position);
+			}
+
+		}
+
+	}
+
 
 	void OnTriggerStay(Collider c)
 	{

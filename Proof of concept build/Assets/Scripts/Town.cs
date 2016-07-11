@@ -102,8 +102,6 @@ public class Town : MonoBehaviour
 
 		scouter = GameObject.FindGameObjectsWithTag("forest");
 
-		print (scouter[1]);
-
 		forest = scouter.ToList<GameObject>();
 		foreach (GameObject c in forest)
 		{
@@ -111,8 +109,6 @@ public class Town : MonoBehaviour
 
 		}
 		forest = forest.OrderBy(c => c.GetComponent<Tile>().dist).ToList();
-
-		print (forest);
 
 		//WATER
 		scouter = GameObject.FindGameObjectsWithTag("water");

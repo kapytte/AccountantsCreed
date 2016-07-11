@@ -31,13 +31,6 @@ public class Hex : MonoBehaviour
 		Physics.Raycast(center, transform.up, out h, 1f);
 
 	
-//		vert = box.size.y / 2;
-//		hori = box.size.x *.75f;
-
-//		CheckNearby();
-//		Instantiate(box, new Vector3(gameObject.transform.position.x - hori, gameObject.transform.position.y , gameObject.transform.position.z - vert), Quaternion.Euler(-90,0,0));
-
-
 	}
 		
 	void Update()
@@ -55,9 +48,8 @@ public class Hex : MonoBehaviour
 		Debug.DrawRay(center, new Vector3(-0.8f, 0f, -0.5f), Color.cyan);
 		Debug.DrawRay(center, new Vector3(-0.8f, 0f, 0.5f), Color.white);
 
-
-
 	}
+
 
 
 
