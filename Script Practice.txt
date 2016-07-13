@@ -1,0 +1,22 @@
+Saving:
+
+
+PlayerPrefs.SetFloat("player x", transform.position.x);
+  
+
+public Enum direction {up,down,left,right};
+
+public direction myDirection;
+
+void something()
+{
+
+myDirection = direction.up;
+
+	if (myDireciton == direction.up)
+	{
+		run.something;
+
+	}
+
+}
