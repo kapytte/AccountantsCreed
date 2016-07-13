@@ -2,12 +2,12 @@
 using System.Collections;
 using UnityEngine.UI;
 using System.Collections.Generic;
-using System.Linq;
+//using System.Linq;
 
 
 public class Town : MonoBehaviour 
 {
-	public float gold = 25, fish = 75, lumber = 200, iron = 100, maxIron, maxLumber, maxFish, MaxGold, t;
+	public float gold = 25, fish = 75, lumber = 200, iron = 100, maxIron, maxLumber, maxFish, MaxGold, t, scanRange = 2.5f;
 
 	public Text[] resoruces;
 	public Text tLumber, tIron, tFish, tGold; 
@@ -15,8 +15,8 @@ public class Town : MonoBehaviour
 	public RawImage bLumber, bIron, bFish, bGold;
 	public GameObject can;
 	public Canvas mainCan;
-	public GameObject[] scouter;
-	public List <GameObject> forest, water, plainHill, richHill;
+	public Collider[] resourceTiles;
+	//public List <GameObject> forest, water, plainHill, richHill;
 
 
 
@@ -39,11 +39,11 @@ public class Town : MonoBehaviour
 		bGold = resourceBar[8];
 
 
-		SortByDistance();
+		//SortByDistance();
 		//foreach ()
 		//forest.(transform.position.magnitude);
 
-
+		FindNearbyResoruces();
 
 	}
 	
@@ -90,6 +90,32 @@ public class Town : MonoBehaviour
 		}
 	}
 
+	//scans for surrounding resources 
+	void FindNearbyResoruces()
+	{
+		resourceTiles = Physics.OverlapSphere(transform.position, scanRange, layerMask: 7);
+
+		foreach (Collider c in resourceTiles)
+		{
+//			if(c.gameObject.tag != Hex)
+//			{
+//				resourceTiles.Remove(c);
+//			}
+		}
+	}
+
+
+	void OnDrawGizmos()
+	{
+		Gizmos.color = Color.red;
+		Gizmos.DrawWireSphere(transform.position, scanRange);
+
+
+			
+
+	}
+
+	/*
 	void SortByDistance()
 	{
 
@@ -137,8 +163,10 @@ public class Town : MonoBehaviour
 		}
 		richHill = richHill.OrderBy(c => c.GetComponent<Tile>().dist).ToList();
 	
+
+
 	}
 
-
+	*/
 
 }

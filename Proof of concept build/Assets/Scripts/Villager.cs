@@ -19,7 +19,7 @@ public class Villager : MonoBehaviour
 		town = GameObject.Find("town");
 		nav = GetComponent<NavMeshAgent>();
 
-		JobProspects();
+		//JobProspects();
 	}
 	
 	// Update is called once per frame
@@ -28,7 +28,7 @@ public class Villager : MonoBehaviour
 		town = GameObject.Find("town");
 		//JobProspects();
 	}
-
+	/*
 	void JobProspects()
 	{
 		
@@ -57,7 +57,7 @@ public class Villager : MonoBehaviour
 			break;
 		}
 
-	}
+	}*/
 
 	void FindWork()
 	{
