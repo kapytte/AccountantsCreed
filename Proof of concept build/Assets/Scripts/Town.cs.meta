@@ -1,10 +1,21 @@
 fileFormatVersion: 2
 guid: 683aaffb6edef0b4d82cc389a6b2f596
-timeCreated: 1465712349
+timeCreated: 1468523863
 licenseType: Free
 MonoImporter:
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - tLumber: {instanceID: 0}
+  - tIron: {instanceID: 0}
+  - tFish: {instanceID: 0}
+  - tGold: {instanceID: 0}
+  - bLumber: {instanceID: 0}
+  - bIron: {instanceID: 0}
+  - bFish: {instanceID: 0}
+  - bGold: {instanceID: 0}
+  - can: {instanceID: 0}
+  - villager: {fileID: 195362, guid: 3d877c6744ae98548bf99f8a0aa7c5c3, type: 2}
+  - mainCan: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

@@ -30,10 +30,13 @@ public class MultipleChoice : MonoBehaviour
 	public Button q1, q2, q3, q4, cont;
 	public Text preview, goldS, repS;
 	public Text question, buttonA, buttonB, buttonC, buttonD, correct;
-	public int goldN, repN, maxQ, choiceQ, prevN;
+	public int goldN, repN, maxQ, choiceQ, prevN, questGiver;
 	public bool questActive;
 	public RawImage questionArea;
 	public string decision;
+
+
+	public GameObject shops, town;
 
 	//random number and quest lists
 	public List <EasyQuestions> lvl1Quest;
@@ -47,6 +50,8 @@ public class MultipleChoice : MonoBehaviour
 
 	void Update()
 	{
+		town = shops.GetComponent<ShopSystem>().town;
+
 		//checks for mouse over quest icons
 		Preview();
 
@@ -59,6 +64,14 @@ public class MultipleChoice : MonoBehaviour
 		//converts reputation and gold to UI element
 		goldS.text = goldN.ToString();
 		repS.text = repN.ToString();
+
+
+		if (town != null)
+		{
+			QuestAmount();
+		}
+
+		CanQuest();
 	}
 
 	//begins quiz
@@ -66,6 +79,8 @@ public class MultipleChoice : MonoBehaviour
 	{
 		//ensures preview window is null
 		prevN = 0;
+
+		questActive  = true;
 
 		//opens question window
 		questionArea.gameObject.SetActive(true);
@@ -89,13 +104,27 @@ public class MultipleChoice : MonoBehaviour
 		buttonD.text = lvl1Quest[randomDraw[choiceQ-1]].optionD;
 
 		//disables quest markers
-		q1.gameObject.SetActive(false); 
-		q2.gameObject.SetActive(false); 
-		q3.gameObject.SetActive(false); 
-		q4.gameObject.SetActive(false); 
+
 
 	}
 		
+	void CanQuest()
+	{
+		if (shops.GetComponent<ShopSystem>().market.isActiveAndEnabled == true || shops.GetComponent<ShopSystem>().mercenaries.isActiveAndEnabled == true || shops.GetComponent<ShopSystem>().blackSmith.isActiveAndEnabled == true || questActive)
+		{
+			q1.gameObject.SetActive(false); 
+			q2.gameObject.SetActive(false); 
+			q3.gameObject.SetActive(false); 
+			q4.gameObject.SetActive(false); 
+		}
+		else
+		{
+			q1.gameObject.SetActive(true); 
+			q2.gameObject.SetActive(true); 
+			q3.gameObject.SetActive(true); 
+			q4.gameObject.SetActive(true); 
+		}
+	}
 
 	//called when player makes a selection in quest window
 	public void Choice()
@@ -129,6 +158,50 @@ public class MultipleChoice : MonoBehaviour
 		cont.gameObject.SetActive(true);
 
 	}
+
+	void QuestAmount()
+	{
+		questGiver = town.GetComponent<Town>().questGivers;
+
+		switch  (questGiver)
+		{
+		case 0:
+			print("hey");
+			q1.image.enabled = false;
+			q2.image.enabled = false;
+			q3.image.enabled = false;
+			q4.image.enabled = false;
+			break;
+
+		case 1: 
+			q1.image.enabled = true;
+			q2.image.enabled = false;
+			q3.image.enabled = false;
+			q4.image.enabled = false;
+			break;
+		
+		case 2: 
+			q1.image.enabled = true;
+			q2.image.enabled = true;
+			q3.image.enabled = false;
+			q4.image.enabled = false;
+			break;
+		case 3: 
+			q1.image.enabled = true;
+			q2.image.enabled = true;
+			q3.image.enabled = true;
+			q4.image.enabled = false;
+			break;
+		case 4: 
+			q1.image.enabled = true;
+			q2.image.enabled = true;
+			q3.image.enabled = true;
+			q4.image.enabled = true;
+			break;
+		}
+	}
+
+
 
 	//calls if hovering over quest icons
 	void Preview()
@@ -165,15 +238,13 @@ public class MultipleChoice : MonoBehaviour
 		//clears the random draw list of current values
 		randomDraw.Clear();
 
+		town.GetComponent<Town>().questGivers -= 1;
+
 		//disables quest window and continue button
 		questionArea.gameObject.SetActive(false);
 		cont.gameObject.SetActive(false);
 
-		//enables quest buttons
-		q1.gameObject.SetActive(true); 
-		q2.gameObject.SetActive(true); 
-		q3.gameObject.SetActive(true); 
-		q4.gameObject.SetActive(true); 
+		questActive  = false;
 
 		//generates 4 random numbers from range provided and puts them in a list, ensuring no duplicate numbers. 
 		int c = 0;
@@ -187,7 +258,6 @@ public class MultipleChoice : MonoBehaviour
 
 				c++;
 			}
-
 		}
 	}
 

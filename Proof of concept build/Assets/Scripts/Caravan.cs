@@ -13,6 +13,8 @@ public class Caravan : MonoBehaviour
 {
 	public Collider currentTile;
 
+	public GameObject shops, townScreen;
+
 	public LayerMask hexLayer;
 
 	public Collider[] surroundingTiles;
@@ -31,10 +33,16 @@ public class Caravan : MonoBehaviour
 
 		if (GetComponent<NavMeshAgent> ().velocity.magnitude == 0) 
 		{
+//			Cursor.lockState = CursorLockMode.None;
+//			Cursor.visible = true;
 			CheckTiles ();
 		} 
+
+
 		else
 		{
+//			Cursor.lockState = CursorLockMode.Locked;
+//			Cursor.visible = false;
 			CannotSelect ();
 		}
 
@@ -71,7 +79,17 @@ public class Caravan : MonoBehaviour
 	}
 
 
+	void OnTriggerEnter(Collider c)
+	{
+		if (c.name == "town")
+		{
+			shops.GetComponent<ShopSystem>().town = c.gameObject;
+			townScreen.SetActive(true);
+			GetComponent<NavMeshAgent>().enabled = false;
+			GetComponent<Caravan>().enabled = false;
 
+		}
+	}
 
 	void OnDrawGizmos()
 	{
