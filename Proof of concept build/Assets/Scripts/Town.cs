@@ -7,15 +7,15 @@ using System.Linq;
 [RequireComponent (typeof(SphereCollider))]
 public class Town : MonoBehaviour 
 {
-	public float gold = 25, fish = 75, lumber = 200, iron = 100, maxIron = 200, maxLumber = 400, maxFish = 150, MaxGold = 50, t, scanRange = 2.5f;
+	public float wheat = 25, fish = 75, lumber = 200, iron = 100, maxIron = 200, maxLumber = 400, maxFish = 150, maxWheat= 50, t, scanRange = 2.5f;
 
 	public int population, workers, ran, questGivers;
 
 	public LayerMask hexLayer = 8;
 	public Text[] resoruces;
-	public Text tLumber, tIron, tFish, tGold; 
+	public Text tLumber, tIron, tFish, tWheat; 
 	public RawImage[] resourceBar;
-	public RawImage bLumber, bIron, bFish, bGold;
+	public RawImage bLumber, bIron, bFish, bWheat;
 	public GameObject can, villager, time;
 	public Canvas mainCan;
 	public Collider[] resourceScan;
@@ -37,7 +37,6 @@ public class Town : MonoBehaviour
 
 		ran = Random.Range(1,100);
 
-		home.radius = 0.5f;
 		home.isTrigger = true;
 
 		time = GameObject.Find("Time");
@@ -102,9 +101,9 @@ public class Town : MonoBehaviour
 		
 	void MaxAmount()
 	{
-		if (gold > MaxGold)
+		if (wheat > maxWheat)
 		{
-			gold = MaxGold;
+			wheat = maxWheat;
 		}
 		if (lumber > maxLumber)
 		{
@@ -152,16 +151,17 @@ public class Town : MonoBehaviour
 			questGivers ++;
 
 			int i = 0;
-			while (i < workers)
+			while (i < 2)
 			{
 				Instantiate(villager, transform.position, Quaternion.identity);
 				villager.GetComponent<Villager>().town = gameObject;
 				villager.GetComponent<Villager>().townLocation = ran;
 				i++;
 			}
+
 			makingVillagers = false;
 
-			gold -= population/6;
+			wheat -= population/6;
 			fish -= population/2;
 			lumber -= population/3;
 			iron -= population/4;

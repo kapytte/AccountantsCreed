@@ -128,7 +128,7 @@ public class ShopSystem : MonoBehaviour
 		else
 			bI.interactable = false;
 
-		if (town.GetComponent<Town>().gold > 0 && cargo.Count < 10 && questGiver.GetComponent<MultipleChoice>().goldN >= Mathf.CeilToInt (goldPrice))
+		if (town.GetComponent<Town>().wheat > 0 && cargo.Count < 10 && questGiver.GetComponent<MultipleChoice>().goldN >= Mathf.CeilToInt (goldPrice))
 			bG.interactable = true;
 		else
 			bG.interactable = false;
@@ -143,12 +143,12 @@ public class ShopSystem : MonoBehaviour
 		fishPrice = fishPrice = town.GetComponent<Town>().fish / 150 * 10;
 		lumberPrice = town.GetComponent<Town>().lumber / 400 * 5;
 		ironPrice = (town.GetComponent<Town>().iron / 200) * 15;
-		goldPrice = (town.GetComponent<Town>().gold / 50) * 25;
+		goldPrice = (town.GetComponent<Town>().wheat / 50) * 25;
 
 		uFish.text =  town.GetComponent<Town>().fish.ToString();
 		uLumber.text = town.GetComponent<Town>().lumber.ToString();
 		UIron.text = town.GetComponent<Town>().iron.ToString();
-		uGold.text = town.GetComponent<Town>().gold.ToString();
+		uGold.text = town.GetComponent<Town>().wheat.ToString();
 
 		priceF.text = Mathf.CeilToInt (fishPrice).ToString();
 		priceL.text = Mathf.CeilToInt (lumberPrice).ToString();
@@ -176,7 +176,7 @@ public class ShopSystem : MonoBehaviour
 	}
 	public void BuyGold()
 	{
-		town.GetComponent<Town>().gold -= 1;
+		town.GetComponent<Town>().wheat -= 1;
 		questGiver.GetComponent<MultipleChoice>().goldN -= Mathf.CeilToInt (goldPrice);
 		cargo.Add(new GameObject ("Gold"));
 	}
@@ -223,7 +223,7 @@ public class ShopSystem : MonoBehaviour
 	}
 	public void SellGold()
 	{
-		town.GetComponent<Town>().gold += 1;
+		town.GetComponent<Town>().wheat += 1;
 		questGiver.GetComponent<MultipleChoice>().goldN += Mathf.CeilToInt (goldPrice);
 		foreach(GameObject c in cargo)
 		{

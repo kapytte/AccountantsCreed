@@ -166,7 +166,6 @@ public class MultipleChoice : MonoBehaviour
 		switch  (questGiver)
 		{
 		case 0:
-			print("hey");
 			q1.image.enabled = false;
 			q2.image.enabled = false;
 			q3.image.enabled = false;

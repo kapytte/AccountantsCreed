@@ -12,7 +12,7 @@ public class Villager : MonoBehaviour
 
 	public int townLocation;
 
-	public enum job {miner, woodcutter, fisher, prospector};
+	public enum job {miner, woodcutter, fisher, farmer};
 	public job profession;
 
 	// Use this for initialization
@@ -94,11 +94,11 @@ public class Villager : MonoBehaviour
 
 			break;
 
-		case job.prospector:
-			jobType = "Prospector";
+		case job.farmer:
+			jobType = "farmer";
 			foreach(GameObject c in town.GetComponent<Town>().resourceList)
 			{
-				if (c.name == "rich hill")
+				if (c.name == "plains")
 				{
 					target = c.gameObject;
 					town.GetComponent<Town>().resourceList.Remove(c);
@@ -127,7 +127,7 @@ public class Villager : MonoBehaviour
 			profession = job.fisher;
 			break;
 		case 4:
-			profession = job.prospector;
+			profession = job.farmer;
 			break;
 		}
 		JobProspects();
@@ -184,7 +184,7 @@ public class Villager : MonoBehaviour
 				if (i > 60)
 					iron ++;
 				break;
-			case "rich hill":
+			case "plains":
 				if (i > 70)
 					gold ++;
 				break;
@@ -222,12 +222,12 @@ public class Villager : MonoBehaviour
 				town.GetComponent<Town>().iron += iron;
 				Destroy(gameObject);
 				break;
-			case job.prospector:
-				town.GetComponent<Town>().gold += gold;
+			case job.farmer:
+				town.GetComponent<Town>().wheat += gold;
 				Destroy(gameObject);
 				break;
 			case job.woodcutter:
-				town.GetComponent<Town>().gold += gold;
+				town.GetComponent<Town>().lumber += lumber;
 				Destroy(gameObject);
 				break;
 			}

@@ -11,33 +11,36 @@ using System.Collections.Generic;
 
 public class Caravan : MonoBehaviour
 {
-	public Collider currentTile;
 
-	public GameObject shops, townScreen;
+	public GameObject shops, townScreen, currentTile;
 
 	public LayerMask hexLayer;
+
+	public enum tileEventList {none, ambush, treasure, hazard};
+	public tileEventList tileEvent;
 
 	public Collider[] surroundingTiles;
 
 	public float overlapR;
 
+	public int i, a, b, d;
+
 	// Use this for initialization
 	void Start () 
 	{
-	
+		CheckTiles ();
 	}
 	
 	// Update is called once per frame
 	void Update () 
 	{
 
-		if (GetComponent<NavMeshAgent> ().velocity.magnitude == 0) 
-		{
-//			Cursor.lockState = CursorLockMode.None;
-//			Cursor.visible = true;
-			CheckTiles ();
-		} 
+		WhereAmI ();
 
+		if (GetComponent<NavMeshAgent> ().velocity.magnitude == 0)
+		{
+			CheckTiles ();
+		}
 
 		else
 		{
@@ -48,22 +51,24 @@ public class Caravan : MonoBehaviour
 
 	}
 
-	void CheckTiles()
+	void WhereAmI()
 	{
+
 		//fire raycast downward and create reference to current Hex
 		RaycastHit h;
 
 		Physics.Raycast (transform.position, -transform.up, out h);
 
-		currentTile = h.collider;
+		currentTile = h.collider.gameObject;
+	}
 
-
-
+	void CheckTiles()
+	{
 		surroundingTiles = Physics.OverlapSphere (transform.position, overlapR, hexLayer);
 
 		foreach (Collider c in surroundingTiles)
 		{
-			if (c != currentTile)
+			if (c.gameObject != currentTile)
 				c.GetComponent<Tile> ().canMouseOver = true;
 
 		}
@@ -77,19 +82,46 @@ public class Caravan : MonoBehaviour
 			c.GetComponent<Tile> ().canMouseOver = false;
 		}
 	}
-
+		
 
 	void OnTriggerEnter(Collider c)
 	{
+		
+		if (c.gameObject == currentTile) 
+		{
+			i = Random.Range (1, 101);
+
+			a = currentTile.GetComponent<Tile>().ambushChance;
+			b = currentTile.GetComponent<Tile>().treasureChance + a;
+			d = currentTile.GetComponent<Tile>().hazardChance + b;
+
+			if (i <= a) 
+			{
+				tileEvent = tileEventList.ambush;
+			}
+			else if (i > a && i <= b) 
+			{
+				tileEvent = tileEventList.treasure;
+			}
+			else if (i > b && i <= d) 
+			{
+				tileEvent = tileEventList.hazard;
+			}
+			else
+			{
+				tileEvent = tileEventList.none;
+			}
+		}
+
 		if (c.name == "town")
 		{
 			shops.GetComponent<ShopSystem>().town = c.gameObject;
 			townScreen.SetActive(true);
 			GetComponent<NavMeshAgent>().enabled = false;
 			GetComponent<Caravan>().enabled = false;
-
 		}
 	}
+
 
 	void OnDrawGizmos()
 	{
@@ -97,6 +129,8 @@ public class Caravan : MonoBehaviour
 		Gizmos.DrawWireSphere (transform.position, overlapR);
 
 	}
+
+	//void 
 
 
 }
