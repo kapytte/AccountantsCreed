@@ -119,8 +119,8 @@ public class WorldTime : MonoBehaviour
 
 	public void LeaveTown()
 	{
-		caravan.GetComponent<Caravan>().enabled = true;
-		caravan.GetComponent<NavMeshAgent>().enabled = true;
+//		caravan.GetComponent<Caravan>().enabled = true;
+//		caravan.GetComponent<NavMeshAgent>().enabled = true;
 		townScreen.SetActive(false);
 	}
 

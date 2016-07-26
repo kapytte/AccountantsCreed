@@ -5,9 +5,13 @@ public class CameraMovement : MonoBehaviour
 {
 
 	public int smooth;
-	public Transform mainCam;
+	public Transform mainCam, caravan;
+
+	public bool LockedCamera;
 
 	public Vector3 startPos, startRot;
+
+	public float f;
 
 	void Awake()
 	{
@@ -25,7 +29,17 @@ public class CameraMovement : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
 	{
-		Movement();
+		if (LockedCamera)
+			FreeMovement ();
+		else
+			Follow ();
+
+		if (Input.GetKeyDown (KeyCode.F)) 
+		{
+			LockedCamera = !LockedCamera;
+		}
+
+
 	}
 
 	//sets camera to starting location on load
@@ -35,7 +49,7 @@ public class CameraMovement : MonoBehaviour
 		mainCam.rotation = (Quaternion.Euler(startRot));
 	}
 
-	void Movement()
+	void FreeMovement()
 	{
 		if (Input.GetKey(KeyCode.A))
 		{
@@ -56,5 +70,11 @@ public class CameraMovement : MonoBehaviour
 		{
 			mainCam.Translate(Vector3.back * smooth * Time.deltaTime, Space.World);
 		}
+	}
+
+	void Follow()
+	{
+		transform.position = Vector3.Slerp (transform.position, new Vector3 (caravan.position.x, caravan.position.y + 3.2f, caravan.position.z - 1.5f), f);
+
 	}
 }

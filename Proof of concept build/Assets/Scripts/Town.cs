@@ -151,7 +151,7 @@ public class Town : MonoBehaviour
 			questGivers ++;
 
 			int i = 0;
-			while (i < 2)
+			while (i < workers)
 			{
 				Instantiate(villager, transform.position, Quaternion.identity);
 				villager.GetComponent<Villager>().town = gameObject;
@@ -161,10 +161,10 @@ public class Town : MonoBehaviour
 
 			makingVillagers = false;
 
-			wheat -= population/6;
-			fish -= population/2;
-			lumber -= population/3;
-			iron -= population/4;
+			wheat -= population/2;
+			fish -= population/4;
+			lumber -= population/6;
+			iron -= population/8;
 
 		}
 	}

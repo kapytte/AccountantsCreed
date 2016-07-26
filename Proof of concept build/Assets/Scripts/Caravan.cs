@@ -117,8 +117,8 @@ public class Caravan : MonoBehaviour
 		{
 			shops.GetComponent<ShopSystem>().town = c.gameObject;
 			townScreen.SetActive(true);
-			GetComponent<NavMeshAgent>().enabled = false;
-			GetComponent<Caravan>().enabled = false;
+//			GetComponent<NavMeshAgent>().enabled = false;
+//			GetComponent<Caravan>().enabled = false;
 		}
 	}
 

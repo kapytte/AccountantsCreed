@@ -33,25 +33,6 @@ public class Hex : MonoBehaviour
 	
 	}
 		
-	void Update()
-	{
-		
-	}
-
-	void CheckNearby()
-	{
-
-		Debug.DrawRay(center, transform.up, Color.green);
-		Debug.DrawRay(center, new Vector3(0.8f, 0f, 0.5f), Color.red);
-		Debug.DrawRay(center, new Vector3(0.8f, 0f,- 0.5f), Color.yellow);
-		Debug.DrawRay(center, -transform.up, Color.blue);
-		Debug.DrawRay(center, new Vector3(-0.8f, 0f, -0.5f), Color.cyan);
-		Debug.DrawRay(center, new Vector3(-0.8f, 0f, 0.5f), Color.white);
-
-	}
-
-
-
 
 
 }

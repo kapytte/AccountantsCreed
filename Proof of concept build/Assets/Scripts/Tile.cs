@@ -12,7 +12,9 @@ public class Tile : MonoBehaviour
 	public int travelTime, ambushBase, treasureBase, hazardBase;
 	public int ambushChance, treasureChance, hazardChance, none;
 
-	public GameObject caravan, clock;
+
+
+	public GameObject caravan, clock, canvas;
 
 	public bool available, canMouseOver, currentTile;
 
@@ -27,7 +29,7 @@ public class Tile : MonoBehaviour
 		hazardBase = 5;
 
 
-
+		canvas = GameObject.Find ("TownScreen");
 		caravan = GameObject.Find ("Caravan");
 		clock = GameObject.Find ("Time");
 
@@ -129,7 +131,7 @@ public class Tile : MonoBehaviour
 	void OnMouseOver()
 	{
 
-		if (canMouseOver == true) 
+		if (canMouseOver == true && canvas.activeInHierarchy == false) 
 		{
 
 			if (Input.GetMouseButton (0))
