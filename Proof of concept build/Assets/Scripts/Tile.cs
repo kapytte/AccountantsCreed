@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-
+using UnityEngine.UI;
 
 [RequireComponent (typeof(Material), typeof(MeshCollider), typeof(Rigidbody))]
 public class Tile : MonoBehaviour 
@@ -14,7 +14,9 @@ public class Tile : MonoBehaviour
 
 
 
-	public GameObject caravan, clock, canvas;
+	public GameObject caravan, clock, canvas, prev;
+
+
 
 	public bool available, canMouseOver, currentTile;
 
@@ -32,6 +34,7 @@ public class Tile : MonoBehaviour
 		canvas = GameObject.Find ("TownScreen");
 		caravan = GameObject.Find ("Caravan");
 		clock = GameObject.Find ("Time");
+		prev = GameObject.Find("PreviewText");
 
 		available = true;
 
@@ -77,48 +80,48 @@ public class Tile : MonoBehaviour
 		{
 			c =	Random.Range(0,100);
 
-			if (c >=0 &&  c < 30)
+			if (c >=0 &&  c < 15)
 			{
 				GetComponent<Renderer>().material.color = Color.blue;
 				gameObject.name = "water";
 				type = "fish";
-				resource = Random.Range (250, 500);
+				resource = Random.Range (100, 200);
 				travelTime = 3;
 				ambushBase *= 0;
 				treasureBase *= 3;
 				hazardBase *= 3;
 			}
 
-			if (c >=30 &&  c < 50)
+			if (c >=15 &&  c < 25)
 			{
 				GetComponent<Renderer>().material.color = Color.grey;
 				gameObject.name = "plain hill";
 				type = "iron";
-				resource = Random.Range (100,200);
+				resource = Random.Range (50,100);
 				travelTime = 2;
 				ambushBase *= 2;
 				treasureBase *= 2;
 				hazardBase *= 2;
 			}
 
-			if (c >=50 &&  c < 90)
+			if (c >=25 &&  c < 55)
 			{
 				GetComponent<Renderer>().material.color = new Color(0,.43f, 0);
 				gameObject.name  = "forest";
 				type = "lumber";
-				resource = Random.Range (200,400);
+				resource = Random.Range (150,300);
 				travelTime = 3;
 				ambushBase *= 2;
 				treasureBase *= 3;
 				hazardBase *= 2;
 			}
 
-			if (c >=90 && c < 100)
+			if (c >=55 && c < 100)
 			{
 				GetComponent<Renderer>().material.color = Color.green;
 				gameObject.name = "plains";
 				type = "wheat";
-				resource = Random.Range (25, 50);
+				resource = Random.Range (200, 400);
 				travelTime = 1;
 				ambushBase *= 2;
 				treasureBase *= 1;
@@ -127,13 +130,23 @@ public class Tile : MonoBehaviour
 		}
 
 	}
+	void OnMouseEnter()
+	{
+		if (canMouseOver == true && canvas.activeInHierarchy == false) 
+		{
+//			string  = gameObject.name + "" + 
+
+			prev.GetComponent<Text>().text = gameObject.name + "\n" + "\n" + "Ambush: " + ambushBase + "\n"+ "Item Find: " + treasureBase + "\n" + "Hazard: " + hazardBase;
+			
+		}
+	}
+
 
 	void OnMouseOver()
 	{
 
 		if (canMouseOver == true && canvas.activeInHierarchy == false) 
 		{
-
 			if (Input.GetMouseButton (0))
 			{
 				caravan.GetComponent<NavMeshAgent> ().SetDestination (transform.position);

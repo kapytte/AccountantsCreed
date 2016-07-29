@@ -53,6 +53,7 @@ public class MultipleChoice : MonoBehaviour
 		town = shops.GetComponent<ShopSystem>().town;
 
 		//checks for mouse over quest icons
+	
 		Preview();
 
 		//ensures reputation does not go below 0
@@ -78,7 +79,7 @@ public class MultipleChoice : MonoBehaviour
 	public void StartQuest()
 	{
 		//ensures preview window is null
-		prevN = 0;
+		preview.text = "";
 
 		questActive  = true;
 
@@ -209,9 +210,6 @@ public class MultipleChoice : MonoBehaviour
 		switch(prevN)
 		{
 		//if zero, show nothing. Otherwise show corrosponding preview
-		case 0:
-			preview.text = "";
-			break;
 
 		case 1:
 			preview.text = lvl1Quest[randomDraw[0]].preview;
@@ -234,8 +232,8 @@ public class MultipleChoice : MonoBehaviour
 	//generates a quest from the random generator
 	public void GenerateQuest()
 	{
-		//clears the random draw list of current values
-		randomDraw.Clear();
+
+
 
 		town.GetComponent<Town>().questGivers -= 1;
 
@@ -245,19 +243,8 @@ public class MultipleChoice : MonoBehaviour
 
 		questActive  = false;
 
-		//generates 4 random numbers from range provided and puts them in a list, ensuring no duplicate numbers. 
-		int c = 0;
-		while(c < maxQ)
-		{
-			int i =	Random.Range(0,10);
+		town.GetComponent<Town>().GenerateQuest();
 
-			if(!randomDraw.Contains(i)) 
-			{
-				randomDraw.Add(i);
-
-				c++;
-			}
-		}
 	}
 
 

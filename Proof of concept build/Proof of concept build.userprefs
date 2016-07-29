@@ -1,24 +1,22 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\ShopSystem.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Town.cs">
     <Files>
+      <File FileName="Assets\Scripts\Town.cs" Line="171" Column="6" />
+      <File FileName="Assets\Scripts\Tile.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Caravan.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\WorldTime.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\Villager.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\WorldTime.cs" Line="124" Column="21" />
-      <File FileName="Assets\Scripts\Town.cs" Line="166" Column="24" />
       <File FileName="Assets\Scripts\Questions.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\MultipleChoice.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\QuestPreview.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Caravan.cs" Line="59" Column="3" />
-      <File FileName="Assets\ShopSystem.cs" Line="75" Column="50" />
-      <File FileName="Assets\Scripts\Hex.cs" Line="35" Column="3" />
-      <File FileName="Assets\Scripts\Tile.cs" Line="134" Column="64" />
-      <File FileName="Assets\Scripts\CameraMovement.cs" Line="78" Column="3" />
+      <File FileName="Assets\ShopSystem.cs" Line="82" Column="9" />
+      <File FileName="Assets\Scripts\Hex.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\CameraMovement.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore>
-      <RunToCursorBreakpoint file="C:\Users\kpytte\Documents\GitHub\AccountantsCreed\Proof of concept build\Assets\ShopSystem.cs" line="259" column="4" />
-    </BreakpointStore>
+    <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
 </Properties>

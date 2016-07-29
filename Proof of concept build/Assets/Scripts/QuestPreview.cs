@@ -14,7 +14,7 @@ public class QuestPreview : MonoBehaviour
 
 	public void LeaveButton()
 	{
-		questFunctions.GetComponent<MultipleChoice>().prevN = 0;
+		questFunctions.GetComponent<MultipleChoice>().preview.text = "";
 	}
 
 	public void SelectButton()

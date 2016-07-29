@@ -10,7 +10,7 @@ public class ShopSystem : MonoBehaviour
 
 	public RawImage market, blackSmith, mercenaries;
 
-	public Text mercCost, weaponCost, uFish, uLumber, UIron, uGold, priceF, priceL, priceI, priceG, inv;
+	public Text mercCost, weaponCost, uFish, uLumber, UIron, uGold, priceF, priceL, priceI, priceG;
 
 	public Button barracks, stalls, smith;
 	public Button bL, bF, bI, bG, sL, sF, sI, sG;
@@ -22,6 +22,7 @@ public class ShopSystem : MonoBehaviour
 	public GameObject town, caravan, questGiver;
 
 	public List <GameObject> cargo = new List<GameObject>(); 
+	public List <Text> inv = new List<Text>(); 
 
 	void Start()
 	{
@@ -33,46 +34,64 @@ public class ShopSystem : MonoBehaviour
 		sF.interactable = false;
 		sG.interactable = false;
 		sI.interactable = false;
+
+
 	}
 
 	void Update()
 	{
-		if (town != null && market)
-		{ 
-			Price();
-		}
-			
-		if (cargo.Count > 0) 
+		if (town != null)
 		{
-			CargoText ();
-		}
+			if (market)
+			{ 
+				Price();
+			}
 
-		g = cargo.Count;
+			g = cargo.Count;
 
-		if (market.isActiveAndEnabled == true || mercenaries.isActiveAndEnabled == true || blackSmith.isActiveAndEnabled == true || questGiver.GetComponent<MultipleChoice>().questActive)
-		{
-			barracks.gameObject.SetActive(false);
-			stalls.gameObject.SetActive(false);
-			smith.gameObject.SetActive(false);
-		}
-		else
-		{
-			barracks.gameObject.SetActive(true);
-			stalls.gameObject.SetActive(true);
-			smith.gameObject.SetActive(true);
-		}
+			if (market.isActiveAndEnabled == true || mercenaries.isActiveAndEnabled == true || blackSmith.isActiveAndEnabled == true || questGiver.GetComponent<MultipleChoice>().questActive)
+			{
+				barracks.gameObject.SetActive(false);
+				stalls.gameObject.SetActive(false);
+				smith.gameObject.SetActive(false);
+			}
+			else
+			{
+				barracks.gameObject.SetActive(true);
+				stalls.gameObject.SetActive(true);
+				smith.gameObject.SetActive(true);
+			}
 
-		if (market.isActiveAndEnabled == true)
-		{
-			ButtonEnabled();
+			if (market.isActiveAndEnabled == true)
+			{
+				ButtonEnabled();
+			}
 		}
-
 
 	}
 
-	void CargoText()
+	void CargoTextAdd()
 	{
-		inv.text = cargo[0].name + " " + cargo[1].name " " + cargo[2].name " " + cargo[3].name " " + cargo[4].name " " + cargo[5].name	" " + cargo[6].name	" " + cargo[7].name	" " + cargo[8].name;
+		int i = 0;
+
+		while (i < inv.Count)
+		{
+			if (i < cargo.Count)
+			{
+				inv[i].text= cargo[i].name[0].ToString();
+				i++;
+			}
+			else
+			{
+				inv[i].text = null;
+				i++;
+			}
+		}
+
+
+
+
+		
 	}
 
 
@@ -158,24 +177,28 @@ public class ShopSystem : MonoBehaviour
 		town.GetComponent<Town>().lumber -= 1;
 		questGiver.GetComponent<MultipleChoice>().goldN -= Mathf.CeilToInt (lumberPrice);
 		cargo.Add(lumber);
+		CargoTextAdd ();
 	}
 	public void BuyFish()
 	{
 		town.GetComponent<Town>().fish -= 1;
 		questGiver.GetComponent<MultipleChoice>().goldN -= Mathf.CeilToInt (fishPrice);
 		cargo.Add(fish);
+		CargoTextAdd ();
 	}
 	public void BuyIron()
 	{
 		town.GetComponent<Town>().iron -= 1;
 		questGiver.GetComponent<MultipleChoice>().goldN -= Mathf.CeilToInt (ironPrice);
 		cargo.Add(iron);
+		CargoTextAdd ();
 	}
 	public void BuyGold()
 	{
 		town.GetComponent<Town>().wheat -= 1;
 		questGiver.GetComponent<MultipleChoice>().goldN -= Mathf.CeilToInt (wheatPrice);
 		cargo.Add(wheat);
+		CargoTextAdd ();
 	}
 
 	public void SellLumber()
@@ -183,6 +206,7 @@ public class ShopSystem : MonoBehaviour
 		cargo.Remove (lumber);
 		questGiver.GetComponent<MultipleChoice> ().goldN += Mathf.CeilToInt (lumberPrice);
 		town.GetComponent<Town> ().lumber += 1;
+		CargoTextAdd ();
 		
 	}
 	public void SellFish()
@@ -190,12 +214,14 @@ public class ShopSystem : MonoBehaviour
 		cargo.Remove (fish);
 		questGiver.GetComponent<MultipleChoice> ().goldN += Mathf.CeilToInt (fishPrice);
 		town.GetComponent<Town> ().fish += 1;
+		CargoTextAdd ();
 	}
 	public void SellIron()
 	{
 		cargo.Remove (iron);
 		questGiver.GetComponent<MultipleChoice> ().goldN += Mathf.CeilToInt (ironPrice);
 		town.GetComponent<Town> ().iron += 1;
+		CargoTextAdd ();
 	}
 
 	public void SellGold()
@@ -203,6 +229,7 @@ public class ShopSystem : MonoBehaviour
 		cargo.Remove (wheat);
 		questGiver.GetComponent<MultipleChoice> ().goldN += Mathf.CeilToInt (wheatPrice);
 		town.GetComponent<Town> ().wheat += 1;
+		CargoTextAdd ();
 
 	}
 }
