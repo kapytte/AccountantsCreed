@@ -5,7 +5,7 @@ public class CameraMovement : MonoBehaviour
 {
 
 	public int smooth;
-	public Transform mainCam, caravan;
+	public Transform mainCam, caravan, canvas;
 
 	public bool LockedCamera;
 
@@ -29,17 +29,19 @@ public class CameraMovement : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
 	{
-		if (LockedCamera)
-			FreeMovement ();
-		else
-			Follow ();
-
-		if (Input.GetKeyDown (KeyCode.F)) 
+		if (canvas.gameObject.activeInHierarchy == false)
 		{
-			LockedCamera = !LockedCamera;
+			if (LockedCamera)
+				FreeMovement ();
+			else
+				Follow ();
+
+			if (Input.GetKeyDown (KeyCode.F)) 
+			{
+				LockedCamera = !LockedCamera;
+			}
+
 		}
-
-
 	}
 
 	//sets camera to starting location on load

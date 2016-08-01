@@ -3,10 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 
-//OBJECTIVES
-//check which hex player is on
-//check surrounding hexes and enable selection
-//move to new hex when player selects it
+
 
 
 public class Caravan : MonoBehaviour

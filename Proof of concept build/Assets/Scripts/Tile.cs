@@ -46,14 +46,7 @@ public class Tile : MonoBehaviour
 			
 		AssignRisk ();
 	}
-	
-	// Update is called once per frame
-	void Update () 
-	{
-	
 
-
-	}
 
 	void ColorChange()
 	{
