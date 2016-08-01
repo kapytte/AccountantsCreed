@@ -34,6 +34,9 @@ public class ShopSystem : MonoBehaviour
 		sF.interactable = false;
 		sG.interactable = false;
 		sI.interactable = false;
+
+
+
 	}
 
 	void Update()
@@ -47,7 +50,10 @@ public class ShopSystem : MonoBehaviour
 
 			g = cargo.Count;
 
-			if (market.isActiveAndEnabled == true || mercenaries.isActiveAndEnabled == true || blackSmith.isActiveAndEnabled == true || questGiver.GetComponent<MultipleChoice>().questActive)
+			if (market.isActiveAndEnabled == true || 
+				mercenaries.isActiveAndEnabled == true || 
+				blackSmith.isActiveAndEnabled == true || 
+				questGiver.GetComponent<MultipleChoice>().questActive)
 			{
 				barracks.gameObject.SetActive(false);
 				stalls.gameObject.SetActive(false);
@@ -68,7 +74,7 @@ public class ShopSystem : MonoBehaviour
 
 	}
 
-	void CargoTextAdd()
+	public void CargoTextAdd()
 	{
 		int i = 0;
 
@@ -148,10 +154,10 @@ public class ShopSystem : MonoBehaviour
 
 	void Price()
 	{
-		fishPrice = fishPrice = town.GetComponent<Town>().fish / 300 * 10;
-		lumberPrice = town.GetComponent<Town>().lumber / 200 * 5;
-		ironPrice = (town.GetComponent<Town>().iron / 100) * 15;
-		wheatPrice = (town.GetComponent<Town>().wheat / 400) * 25;
+		fishPrice = fishPrice = (town.GetComponent<Town>().fish / 300) * 2;
+		lumberPrice = town.GetComponent<Town>().lumber / 200 * 1;
+		ironPrice = (town.GetComponent<Town>().iron / 100) * 4;
+		wheatPrice = (town.GetComponent<Town>().wheat / 400) * 3;
 
 		uFish.text =  town.GetComponent<Town>().fish.ToString();
 		uLumber.text = town.GetComponent<Town>().lumber.ToString();

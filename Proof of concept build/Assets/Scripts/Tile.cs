@@ -23,6 +23,15 @@ public class Tile : MonoBehaviour
 
 	public int c;
 
+	void Awake()
+	{
+		canvas = GameObject.Find ("TownScreen");
+		caravan = GameObject.Find ("Caravan");
+		clock = GameObject.Find ("Time");
+		prev = GameObject.Find("PreviewText");
+
+	}
+
 	// Use this for initialization
 	void Start () 
 	{
@@ -30,14 +39,7 @@ public class Tile : MonoBehaviour
 		treasureBase = 10;
 		hazardBase = 5;
 
-
-		canvas = GameObject.Find ("TownScreen");
-		caravan = GameObject.Find ("Caravan");
-		clock = GameObject.Find ("Time");
-		prev = GameObject.Find("PreviewText");
-
 		available = true;
-
 
 		if(gameObject.transform.parent.name != null)
 		{
@@ -45,6 +47,11 @@ public class Tile : MonoBehaviour
 		}
 			
 		AssignRisk ();
+
+		if (canvas.activeInHierarchy != false) 
+		{
+			canvas.SetActive (false);
+		}
 	}
 
 
@@ -68,7 +75,6 @@ public class Tile : MonoBehaviour
 			hazardBase *= 1;
 		}
 			
-		
 		else
 		{
 			c =	Random.Range(0,100);
@@ -128,10 +134,21 @@ public class Tile : MonoBehaviour
 		if (canMouseOver == true && canvas.activeInHierarchy == false) 
 		{
 //			string  = gameObject.name + "" + 
-
-			prev.GetComponent<Text>().text = gameObject.name + "\n" + "\n" + "Ambush: " + ambushBase + "\n"+ "Item Find: " + treasureBase + "\n" + "Hazard: " + hazardBase;
-			
+			if (gameObject.name == "town")
+			{
+				prev.GetComponent<Text> ().text = gameObject.name;
+			}
+			else
+			{
+				prev.GetComponent<Text> ().text = gameObject.name + "\n" + "\n" + "Ambush: " + ambushBase + "\n" + "Item Find: " + treasureBase + "\n" + "Hazard: " + hazardBase;
+			}
 		}
+	}
+
+	void OnMouseExit()
+	{
+
+		prev.GetComponent<Text> ().text = null;
 	}
 
 
@@ -144,6 +161,7 @@ public class Tile : MonoBehaviour
 			{
 				caravan.GetComponent<NavMeshAgent> ().SetDestination (transform.position);
 				clock.GetComponent<WorldTime>().AddTime();
+				prev.GetComponent<Text> ().text = null;
 			}
 		}
 	}

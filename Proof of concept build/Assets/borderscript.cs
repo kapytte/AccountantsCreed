@@ -7,6 +7,7 @@ public class borderscript : MonoBehaviour
 	public Vector3 direciton;
 	public GameObject canvas;
 	public float smooth;
+	public bool moving;
 
 	// Use this for initialization
 	void Start () 
@@ -15,11 +16,20 @@ public class borderscript : MonoBehaviour
 		smooth = mainCamera.GetComponent<CameraMovement>().smooth;
 	}
 
-	void OnMouseOver()
+	void Update()
 	{
-		if (mainCamera.GetComponent <CameraMovement>().LockedCamera == false && canvas.gameObject.activeInHierarchy == false)
+		if (moving) 
 		{
-			mainCamera.transform.Translate(direciton * smooth * Time.deltaTime, Space.World);
+			if (mainCamera.GetComponent <CameraMovement>().LockedCamera == false && canvas.gameObject.activeInHierarchy == false)
+			{
+				mainCamera.transform.Translate(direciton * smooth * Time.deltaTime, Space.World);
+			}
 		}
+
+	}
+
+	public void Move()
+	{
+		moving = !moving;
 	}
 }

@@ -111,7 +111,9 @@ public class MultipleChoice : MonoBehaviour
 		
 	void CanQuest()
 	{
-		if (shops.GetComponent<ShopSystem>().market.isActiveAndEnabled == true || shops.GetComponent<ShopSystem>().mercenaries.isActiveAndEnabled == true || shops.GetComponent<ShopSystem>().blackSmith.isActiveAndEnabled == true || questActive)
+		if (shops.GetComponent<ShopSystem>().market.isActiveAndEnabled == true || 
+			shops.GetComponent<ShopSystem>().mercenaries.isActiveAndEnabled == true ||
+			shops.GetComponent<ShopSystem>().blackSmith.isActiveAndEnabled == true || questActive)
 		{
 			q1.gameObject.SetActive(false); 
 			q2.gameObject.SetActive(false); 
@@ -232,9 +234,6 @@ public class MultipleChoice : MonoBehaviour
 	//generates a quest from the random generator
 	public void GenerateQuest()
 	{
-
-
-
 		town.GetComponent<Town>().questGivers -= 1;
 
 		//disables quest window and continue button
@@ -246,8 +245,5 @@ public class MultipleChoice : MonoBehaviour
 		town.GetComponent<Town>().GenerateQuest();
 
 	}
-
-
-
 
 }

@@ -7,7 +7,7 @@ using System.Linq;
 [RequireComponent (typeof(SphereCollider))]
 public class Town : MonoBehaviour 
 {
-	public float wheat = 25, fish = 75, lumber = 200, iron = 100, maxIron = 200, maxLumber = 400, maxFish = 150, maxWheat= 50, t, scanRange = 2.5f;
+	public float wheat = 200, fish = 150, lumber = 100, iron = 50, maxIron = 100, maxLumber = 200, maxFish = 300, maxWheat= 400, t, scanRange = 2.5f;
 
 	public int population, workers, ran, questGivers;
 
@@ -89,7 +89,6 @@ public class Town : MonoBehaviour
 	{
 		if (time.GetComponent<WorldTime>().h == 7 && time.GetComponent<WorldTime>().am == true)
 		{
-			//print ("hey");
 			MakeVillagers();
 		}
 
@@ -139,7 +138,6 @@ public class Town : MonoBehaviour
 	//scans for surrounding resources 
 	void FindNearbyResoruces()
 	{
-		print(gameObject.layer);
 		hexLayer = (gameObject.layer);
 		resourceScan = Physics.OverlapSphere(transform.position, scanRange);
 	

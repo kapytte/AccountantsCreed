@@ -20,12 +20,15 @@ public class Caravan : MonoBehaviour
 
 	public float overlapR;
 
-	public int i, a, b, d;
+
+	public int i, a, b, d, def, bandit, help;
 
 	// Use this for initialization
 	void Start () 
 	{
 		CheckTiles ();
+
+		def = 10;
 	}
 	
 	// Update is called once per frame
@@ -67,7 +70,6 @@ public class Caravan : MonoBehaviour
 		{
 			if (c.gameObject != currentTile)
 				c.GetComponent<Tile> ().canMouseOver = true;
-
 		}
 
 	}
@@ -76,7 +78,7 @@ public class Caravan : MonoBehaviour
 	{
 		foreach (Collider c in surroundingTiles)
 		{
-			c.GetComponent<Tile> ().canMouseOver = false;
+			c.GetComponent<Tile>().canMouseOver = false;
 		}
 	}
 		
@@ -95,10 +97,12 @@ public class Caravan : MonoBehaviour
 			if (i <= a) 
 			{
 				tileEvent = tileEventList.ambush;
+				Ambush ();
 			}
 			else if (i > a && i <= b) 
 			{
 				tileEvent = tileEventList.treasure;
+				Treasure ();
 			}
 			else if (i > b && i <= d) 
 			{
@@ -127,7 +131,80 @@ public class Caravan : MonoBehaviour
 
 	}
 
-	//void 
+	void Ambush()
+	{
+		if (shops.GetComponent<ShopSystem> ().cargo.Count > 0) 
+		{
+			int j;
+
+			j = Random.Range (1, 21);
+
+			def += j;
+			def += help;
+
+
+			bandit = shops.GetComponent<ShopSystem> ().cargo.Count * 2;
+
+			j = Random.Range (1, 21);
+
+			bandit += j;
+
+			if (def >= bandit) 
+			{
+				j = Random.Range (0, shops.GetComponent<ShopSystem> ().cargo.Count - 1);
+
+				print ("Bandits stole some " +  shops.GetComponent<ShopSystem> ().cargo[j].name);
+				shops.GetComponent<ShopSystem> ().cargo.RemoveAt (j);
+				shops.GetComponent<ShopSystem> ().CargoTextAdd ();
+			}
+			else 
+			{
+				print ("Safe");
+			}
+		} 
+
+		else 
+		{
+			print ("Nope");
+		}
+	}
+
+	void Treasure()
+	{
+		if (currentTile.name == "water") 
+		{
+			shops.GetComponent<ShopSystem> ().cargo.Add (shops.GetComponent<ShopSystem>().fish);
+			print ("Found some Fish");
+		}
+		if (currentTile.name == "forest") 
+		{
+			shops.GetComponent<ShopSystem> ().cargo.Add (shops.GetComponent<ShopSystem>().lumber);
+			print ("Found some Lumber");
+		}
+		if (currentTile.name == "plain hill") 
+		{
+			shops.GetComponent<ShopSystem> ().cargo.Add (shops.GetComponent<ShopSystem>().iron);
+			print ("Found some iron");
+		}
+		if (currentTile.name == "plains") 
+		{
+			shops.GetComponent<ShopSystem> ().cargo.Add (shops.GetComponent<ShopSystem>().wheat);
+			print ("Found some Wheat");
+		}
+
+		shops.GetComponent<ShopSystem> ().CargoTextAdd ();
+
+	}
+		
+	void Hazard() 
+	{
+		int j;
+
+		j = Random.Range (0, shops.GetComponent<ShopSystem> ().cargo.Count);
+		shops.GetComponent<ShopSystem> ().cargo.RemoveAt (j);
+		shops.GetComponent<ShopSystem> ().CargoTextAdd ();
+		print ("Safe");
+	}
 
 
 }

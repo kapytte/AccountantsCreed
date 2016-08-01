@@ -5,13 +5,13 @@ using System.Collections.Generic;
 
 public class WorldTime : MonoBehaviour
 {
-	public GameObject sun, caravan, townScreen;
+	public GameObject sun, caravan, townScreen, choice;
 	public Canvas mainC;
-	public Text hour, phase;
+	public Text hour, phase, debtT, daysT;
 
 	public Image clockBG;
 
-	public int addtime, h;
+	public int addtime, h, debt, days;
 	public float rotateClock, rotateSpeed, timePassing;
 	public bool am, start;
 
@@ -23,7 +23,11 @@ public class WorldTime : MonoBehaviour
 	// Use this for initialization
 	void Start () 
 	{
+		days = 30;
+		daysT.text = days.ToString();
 
+		debt = 20;
+		debtT.text = debt.ToString ();
 	}
 	
 	// Update is called once per frame
@@ -100,6 +104,22 @@ public class WorldTime : MonoBehaviour
 			{
 				sun.GetComponentInChildren<Light>().enabled = false;
 			}
+
+			if (h == 11 && am == false) 
+			{
+				days -= 1;
+				daysT.text = days.ToString ();
+			}
+
+			if (days == 0) 
+			{
+				choice.GetComponent<MultipleChoice> ().goldN -= debt;
+
+				debt += 10;
+				debtT.text = debt.ToString ();
+			}
+
+
 
 			if (roster.Capacity > 0)
 			{		
