@@ -154,10 +154,10 @@ public class ShopSystem : MonoBehaviour
 
 	void Price()
 	{
-		fishPrice = fishPrice = (town.GetComponent<Town>().fish / 300) * 2;
-		lumberPrice = town.GetComponent<Town>().lumber / 200 * 1;
-		ironPrice = (town.GetComponent<Town>().iron / 100) * 4;
-		wheatPrice = (town.GetComponent<Town>().wheat / 400) * 3;
+		fishPrice = (300 / town.GetComponent<Town>().fish) * 2;
+		lumberPrice = (300 / town.GetComponent<Town>().lumber) * 3;
+		ironPrice = (100 / town.GetComponent<Town>().iron) * 4;
+		wheatPrice = (400 / town.GetComponent<Town>().wheat);
 
 		uFish.text =  town.GetComponent<Town>().fish.ToString();
 		uLumber.text = town.GetComponent<Town>().lumber.ToString();
@@ -228,7 +228,6 @@ public class ShopSystem : MonoBehaviour
 		questGiver.GetComponent<MultipleChoice> ().goldN += Mathf.CeilToInt (wheatPrice);
 		town.GetComponent<Town> ().wheat += 1;
 		CargoTextAdd ();
-
 	}
 }
 

@@ -184,7 +184,7 @@ public class Caravan : MonoBehaviour
 		if (currentTile.name == "plain hill") 
 		{
 			shops.GetComponent<ShopSystem> ().cargo.Add (shops.GetComponent<ShopSystem>().iron);
-			print ("Found some iron");
+			print ("Found some Iron");
 		}
 		if (currentTile.name == "plains") 
 		{
