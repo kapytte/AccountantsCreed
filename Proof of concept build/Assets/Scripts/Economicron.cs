@@ -35,6 +35,11 @@ public class Economicron : MonoBehaviour
 
 		page = 0;
 
+		canv1.texture = bookPages[page].fade1;
+		canv2.texture = bookPages[page].fade2;
+		canv3.texture = bookPages[page].fade3;
+		canv4.texture = bookPages[page].text;
+
 		gameObject.SetActive(false);
 	}
 
@@ -128,8 +133,6 @@ public class Economicron : MonoBehaviour
 	{
 		
 		page -= 1;
-		Cursor.lockState = CursorLockMode.Locked;
-		Cursor.visible = false;
 		running = true;
 		StartCoroutine(Waiting());
 
@@ -139,28 +142,23 @@ public class Economicron : MonoBehaviour
 	{
 
 		page += 1;
-		Cursor.lockState = CursorLockMode.Locked;
-		Cursor.visible = false;
 		running = true;
 		StartCoroutine(Waiting());
 
 	}
 	IEnumerator Waiting()
 	{
-		while (running == true)
-		{
-			yield return null;
-		}
+		
+		yield return new WaitWhile(() => running == true);
+
 		canv1.texture = bookPages[page].fade1 as Texture;
 		canv2.texture = bookPages[page].fade2 as Texture;
 		canv3.texture = bookPages[page].fade3 as Texture;
 		canv4.texture = bookPages[page].text as Texture;
 		running = true;
 
-		while (running == true)
-		{
-			yield return null;
-		}
+		yield return new WaitWhile(() => running == true);
+
 		Cursor.lockState = CursorLockMode.None;
 		Cursor.visible = true;
 
@@ -173,7 +171,7 @@ public class Economicron : MonoBehaviour
 			goLeft.interactable = true;
 		}
 
-		if (page == bookPages.Count)
+		if (page == bookPages.Count - 1)
 		{
 			goRight.interactable = false;
 		}
@@ -225,6 +223,7 @@ public class Economicron : MonoBehaviour
 			g = 7;
 			c = 0;
 			running = !running;
+			one = false;
 			break;
 		}
 	}
@@ -242,6 +241,7 @@ public class Economicron : MonoBehaviour
 			g = 0;
 			a = 0;
 			running = !running;
+			one = true;
 			break;
 		case 1: 
 			a -= e;
