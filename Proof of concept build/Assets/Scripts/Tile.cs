@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 [RequireComponent (typeof(Material), typeof(MeshCollider), typeof(Rigidbody))]
 public class Tile : MonoBehaviour 
@@ -10,9 +11,11 @@ public class Tile : MonoBehaviour
 	public int resource; 
 	public float dist;
 	public int travelTime, ambushBase, treasureBase, hazardBase;
+	public int ambushMod, treasureMod, hazardMod;
 	public int ambushChance, treasureChance, hazardChance, none;
 
-
+	public Collider[] surroundingTiles;
+	public List<GameObject> hexes = new List<GameObject>();
 
 	public GameObject caravan, clock, canvas, prev;
 
@@ -45,13 +48,25 @@ public class Tile : MonoBehaviour
 		{
 			ColorChange();
 		}
-			
-		AssignRisk ();
 
 		if (canvas.activeInHierarchy != false) 
 		{
 			canvas.SetActive (false);
 		}
+
+		surroundingTiles = Physics.OverlapSphere(transform.position, 1.4f);
+
+		for(int i = 0; i < surroundingTiles.Length; i++)
+		{
+			if(surroundingTiles[i].tag == "Hex" && !hexes.Contains(surroundingTiles[i].gameObject) && surroundingTiles[i].gameObject != gameObject)
+			{
+				hexes.Add(surroundingTiles[i].gameObject);
+			}
+		}
+
+		Shuffle();
+
+		AssignRisk ();
 	}
 
 
@@ -133,6 +148,7 @@ public class Tile : MonoBehaviour
 	{
 		if (canMouseOver == true && canvas.activeInHierarchy == false) 
 		{
+
 //			string  = gameObject.name + "" + 
 			if (gameObject.name == "town")
 			{
@@ -140,7 +156,8 @@ public class Tile : MonoBehaviour
 			}
 			else
 			{
-				prev.GetComponent<Text> ().text = gameObject.name + "\n" + "\n" + "Ambush: " + ambushBase + "\n" + "Item Find: " + treasureBase + "\n" + "Hazard: " + hazardBase;
+				int d = caravan.GetComponent<Caravan>().danger;
+				prev.GetComponent<Text> ().text = gameObject.name + "\n" + "\n" + "Ambush: " + ambushBase * d + "\n" + "Item Find: " + treasureBase + "\n" + "Hazard: " + hazardBase * d;
 			}
 		}
 	}
@@ -154,9 +171,19 @@ public class Tile : MonoBehaviour
 
 	void OnMouseOver()
 	{
-
 		if (canMouseOver == true && canvas.activeInHierarchy == false) 
 		{
+			
+			if (gameObject.name == "town")
+			{
+				prev.GetComponent<Text> ().text = gameObject.name;
+			}
+			else
+			{
+				int d = caravan.GetComponent<Caravan>().danger;
+				prev.GetComponent<Text> ().text = gameObject.name + "\n" + "\n" + "Ambush: " + ambushMod + "\n" + "Item Find: " + treasureMod + "\n" + "Hazard: " + hazardMod;
+			}
+
 			if (Input.GetMouseButton (0))
 			{
 				caravan.GetComponent<NavMeshAgent> ().SetDestination (transform.position);
@@ -166,20 +193,37 @@ public class Tile : MonoBehaviour
 		}
 	}
 
-	void OnTriggerEnter(Collider c)
+	public void OnTriggerEnter(Collider c)
 	{
 		if (c.name == "Caravan") 
 		{
 			AssignRisk ();
+
+			ShuffleAll();
 		}
 	}
 
+	public void ShuffleAll()
+	{
+		for(int i = 0; i < hexes.Count; i++)
+		{
+			hexes[i].GetComponent<Tile>().Shuffle();
+		}
+	}
 
+	public void Shuffle()
+	{
+		ambushMod = Random.Range(ambushBase  / 2, ambushBase) * caravan.GetComponent<Caravan>().danger;
+		treasureMod = Random.Range(treasureBase  / 2, treasureBase);
+		hazardMod = Random.Range(hazardBase  / 2, hazardBase) * caravan.GetComponent<Caravan>().danger;
+
+	}
+		
 	void AssignRisk() 
 	{
-		ambushChance = Random.Range (ambushBase / 2, ambushBase);
-		treasureChance = Random.Range (treasureBase / 2, treasureBase);
-		hazardChance = Random.Range (hazardBase / 2, hazardBase);
+		ambushChance = Random.Range (ambushMod / 2, ambushMod);
+		treasureChance = Random.Range (treasureMod / 2, treasureMod);
+		hazardChance = Random.Range (hazardMod / 2, hazardMod);
 		none = 100 - ambushChance - treasureChance - hazardChance;
 	}
 

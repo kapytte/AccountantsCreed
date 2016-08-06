@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-
+using UnityEngine.UI;
 
 
 
@@ -9,7 +9,7 @@ using System.Collections.Generic;
 public class Caravan : MonoBehaviour
 {
 
-	public GameObject shops, townScreen, currentTile;
+	public GameObject shops, townScreen, currentTile, time;
 
 	public LayerMask hexLayer;
 
@@ -17,11 +17,13 @@ public class Caravan : MonoBehaviour
 	public tileEventList tileEvent;
 
 	public Collider[] surroundingTiles;
+	public List<MeshCollider> hexes = new List<MeshCollider>();
 
 	public float overlapR;
 
+	public Text defT, banditT;
 
-	public int i, a, b, d, def, bandit, help;
+	public int i, a, b, d, def, bandit, help, danger;
 
 	// Use this for initialization
 	void Start () 
@@ -29,6 +31,9 @@ public class Caravan : MonoBehaviour
 		CheckTiles ();
 
 		def = 10;
+		defT.text = def.ToString();
+
+		danger = 1;
 	}
 	
 	// Update is called once per frame
@@ -68,10 +73,9 @@ public class Caravan : MonoBehaviour
 
 		foreach (Collider c in surroundingTiles)
 		{
-			if (c.gameObject != currentTile)
+			if (c.gameObject != currentTile && time.GetComponent<WorldTime>().start == false)
 				c.GetComponent<Tile> ().canMouseOver = true;
 		}
-
 	}
 
 	public void CannotSelect()
@@ -112,6 +116,7 @@ public class Caravan : MonoBehaviour
 			{
 				tileEvent = tileEventList.none;
 			}
+
 		}
 
 		if (c.name == "town")
@@ -120,8 +125,12 @@ public class Caravan : MonoBehaviour
 			townScreen.SetActive(true);
 //			GetComponent<NavMeshAgent>().enabled = false;
 //			GetComponent<Caravan>().enabled = false;
+			shops.GetComponent<ShopSystem>().MercsLeave();
 		}
+
+
 	}
+		
 
 
 	void OnDrawGizmos()

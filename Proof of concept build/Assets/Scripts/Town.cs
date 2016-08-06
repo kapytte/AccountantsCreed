@@ -7,7 +7,7 @@ using System.Linq;
 [RequireComponent (typeof(SphereCollider))]
 public class Town : MonoBehaviour 
 {
-	public float wheat = 200, fish = 150, lumber = 100, iron = 50, maxIron = 100, maxLumber = 200, maxFish = 300, maxWheat= 400, t, scanRange = 2.5f;
+	public float wheat, fish, lumber, iron, maxIron = 50, maxLumber = 100, maxFish = 150, maxWheat= 200, t, scanRange = 2.5f;
 
 	public int population, workers, ran, questGivers;
 
@@ -62,6 +62,10 @@ public class Town : MonoBehaviour
 
 		GenerateQuest();
 
+		wheat = Mathf.CeilToInt (Random.Range((maxWheat * .25f), (maxWheat * .75f)));
+		fish = Mathf.CeilToInt(Random.Range((maxFish * .25f), (maxFish * .75f)));
+		lumber = Mathf.CeilToInt(Random.Range((maxLumber * .25f), (maxLumber * .75f)));
+		iron = Mathf.CeilToInt(Random.Range((maxIron * .25f), (maxIron * .75f)));
 
 //		resoruces = mainCan.GetComponentsInChildren<Text>();
 //		tLumber = resoruces[0];

@@ -57,7 +57,6 @@
      <Compile Include="Assets\Scripts\Town.cs" />
      <Compile Include="Assets\Scripts\Villager.cs" />
      <Compile Include="Assets\Scripts\WorldTime.cs" />
-     <Compile Include="Assets\borderscript.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>

@@ -39,6 +39,7 @@ public class CameraMovement : MonoBehaviour
 			if (Input.GetKeyDown (KeyCode.F)) 
 			{
 				LockedCamera = !LockedCamera;
+				smooth = 3;
 			}
 
 		}
@@ -53,25 +54,48 @@ public class CameraMovement : MonoBehaviour
 
 	void FreeMovement()
 	{
-		if (Input.GetKey(KeyCode.A))
+		if (Input.GetKey(KeyCode.A) || Input.mousePosition.x < (Screen.width * 0.1f))
 		{
 			mainCam.Translate(Vector3.left * smooth * Time.deltaTime, Space.World);
 		}
 
-		if (Input.GetKey(KeyCode.W))
+		if (Input.GetKey(KeyCode.W) || Input.mousePosition.y > (Screen.height * 0.9f))
 		{
 			mainCam.Translate(Vector3.forward * smooth * Time.deltaTime, Space.World);
 		}
 
-		if (Input.GetKey(KeyCode.D))
+		if (Input.GetKey(KeyCode.D) || Input.mousePosition.x > (Screen.width * 0.9f))
 		{
 			mainCam.Translate(Vector3.right * smooth * Time.deltaTime, Space.World);
 		}
 
-		if (Input.GetKey(KeyCode.S))
+		if (Input.GetKey(KeyCode.S) || Input.mousePosition.y < (Screen.height * 0.1f))
 		{
 			mainCam.Translate(Vector3.back * smooth * Time.deltaTime, Space.World);
 		}
+
+
+		if(Input.mouseScrollDelta.y > 0 && mainCam.transform.position.y > 1.5f)
+		{
+			mainCam.Translate(Vector3.down * (smooth * 3) * Time.deltaTime, Space.World);
+		}
+
+		if(Input.mouseScrollDelta.y < 0 && mainCam.transform.position.y < 7.5f)
+		{
+			mainCam.Translate(Vector3.up * (smooth * 3) * Time.deltaTime, Space.World);
+		}
+	
+		if (Input.GetKeyDown(KeyCode.LeftShift))
+		{
+			smooth *= 2;
+		}
+
+		if (Input.GetKeyUp(KeyCode.LeftShift)) 
+		{
+			smooth /= 2;
+		}
+
+
 	}
 
 	void Follow()
@@ -79,4 +103,6 @@ public class CameraMovement : MonoBehaviour
 		transform.position = Vector3.Slerp (transform.position, new Vector3 (caravan.position.x, caravan.position.y + 3.2f, caravan.position.z - 1.5f), f);
 
 	}
+
+
 }

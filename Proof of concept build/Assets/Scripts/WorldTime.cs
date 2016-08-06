@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 public class WorldTime : MonoBehaviour
 {
-	public GameObject sun, caravan, townScreen, choice;
+	public GameObject sun, caravan, townScreen, choice, camp;
 	public Canvas mainC;
 	public Text hour, phase, debtT, daysT;
 
@@ -41,6 +41,7 @@ public class WorldTime : MonoBehaviour
 		{
 			SimulateDayCycle();
 		}
+			
 
 		ClosingTime();
 //		WakeUp();
@@ -48,10 +49,18 @@ public class WorldTime : MonoBehaviour
 
 	void SimulateDayCycle()
 	{
+		if(timePassing < 1)
+		{
+			clockBG.transform.rotation = Quaternion.Lerp(clockFromPos, clockToPos, timePassing);
+			sun.transform.rotation = clockBG.transform.rotation;
+		}
+		else
+		{
+			start = false;
+		}
 
 
-		clockBG.transform.rotation = Quaternion.Lerp(clockFromPos, clockToPos, timePassing);
-		sun.transform.rotation = clockBG.transform.rotation;
+
 	}
 
 	void Clock()
@@ -99,10 +108,17 @@ public class WorldTime : MonoBehaviour
 			if (h == 5 && am)
 			{
 				sun.GetComponentInChildren<Light>().enabled = true;
+				caravan.GetComponent<Caravan>().danger = 1;
+				if (camp.activeInHierarchy)
+				{
+					camp.SetActive(false);
+				}
 			}
 			else if (h == 6 && am == false)
 			{
 				sun.GetComponentInChildren<Light>().enabled = false;
+				caravan.GetComponent<Caravan>().danger = 2;
+				camp.SetActive(true);
 			}
 
 			if (h == 11 && am == false) 
@@ -117,9 +133,8 @@ public class WorldTime : MonoBehaviour
 
 				debt += 10;
 				debtT.text = debt.ToString ();
+				days = 30;
 			}
-
-
 
 			if (roster.Capacity > 0)
 			{		
@@ -134,6 +149,7 @@ public class WorldTime : MonoBehaviour
 			start = true;
 		}
 
+	
 
 	}
 
@@ -172,6 +188,34 @@ public class WorldTime : MonoBehaviour
 //		}
 //	}
 
+	public void Camp()
+	{
+		if (h < 11 && am == false) 
+		{
+			days -= 1;
+			daysT.text = days.ToString ();
+		}
+
+		h = 5;
+		am = true;
+
+		rotateSpeed = Time.time;
+
+		clockFromPos = clockBG.transform.rotation;
+
+		clockToPos = new Quaternion(0, 0, 0.7f, 0.7f);
+
+		sun.GetComponentInChildren<Light>().enabled = true;
+		caravan.GetComponent<Caravan>().danger = 1;
+		if (camp.activeInHierarchy)
+		{
+			camp.SetActive(false);
+		}
+
+		caravan.GetComponent<Caravan>().currentTile.GetComponent<Tile>().ShuffleAll();
+
+		start = true;
+	}
 
 	
 }
