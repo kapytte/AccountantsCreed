@@ -19,7 +19,7 @@ public class EasyQuestions
 	public string optionC;
 	public string optionD;
 	public string answer;
-	public int goldReward;
+	public int PageNum;
 	public int reputation;
 }
 	
@@ -144,7 +144,6 @@ public class MultipleChoice : MonoBehaviour
 			//show green text and add gold & reputation 
 			question.color = Color.green;
 			question.text = "Correct";
-			goldN += lvl1Quest[randomDraw[choiceQ-1]].goldReward;
 			repN += lvl1Quest[randomDraw[choiceQ-1]].reputation;
 		}
 

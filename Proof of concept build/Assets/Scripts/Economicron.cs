@@ -24,7 +24,7 @@ public class Economicron : MonoBehaviour
 	public GameObject content;
 	public float a, b, c, d, e, g, i, openSpeed;
 	public int h, page;
-	public bool one, running, open, close;
+	public bool one, running, open, close, closing;
 
 	public float speed;
 
@@ -98,6 +98,8 @@ public class Economicron : MonoBehaviour
 		}
 		else 
 		{
+			
+
 			closeButton.enabled = true;
 
 			running = true;
@@ -107,7 +109,7 @@ public class Economicron : MonoBehaviour
 
 	}
 
-	public void CloseBook()
+	void CloseBook()
 	{
 
 
@@ -115,6 +117,7 @@ public class Economicron : MonoBehaviour
 
 		if (i > 0)
 		{
+
 			Cursor.visible = false;
 			close = true;
 			leftPage.rectTransform.localScale = new Vector2(i,13.5f);
@@ -128,6 +131,8 @@ public class Economicron : MonoBehaviour
 		}
 
 	}
+
+
 
 	public void MoveLeft()
 	{
@@ -146,6 +151,23 @@ public class Economicron : MonoBehaviour
 		StartCoroutine(Waiting());
 
 	}
+	public void BeginClose()
+	{
+		StartCoroutine(FadeClose());
+
+	}
+
+	IEnumerator FadeClose()
+	{
+		running = true;
+
+		yield return new WaitWhile(() => running == true);
+
+		CloseBook();
+
+	}
+
+
 	IEnumerator Waiting()
 	{
 		

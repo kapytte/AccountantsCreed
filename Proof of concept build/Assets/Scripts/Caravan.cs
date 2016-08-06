@@ -9,7 +9,7 @@ using UnityEngine.UI;
 public class Caravan : MonoBehaviour
 {
 
-	public GameObject shops, townScreen, currentTile, time;
+	public GameObject shops, townScreen, currentTile, time, choiceSystem;
 
 	public LayerMask hexLayer;
 
@@ -19,11 +19,23 @@ public class Caravan : MonoBehaviour
 	public Collider[] surroundingTiles;
 	public List<MeshCollider> hexes = new List<MeshCollider>();
 
+	//inputs for Hazard events
+	public GameObject ambush, hazard;
+	public Text randDEF, randATK, outcomeA, resultA, outcomeH, resultH;
+	public int def, newDEF, bandit;
+
+	//input for treasure
+	public GameObject treasure;
+	public Text outcomeT; 
+
 	public float overlapR;
 
 	public Text defT, banditT;
 
-	public int i, a, b, d, def, bandit, help, danger;
+	public int i, a, b, d, help, danger;
+
+	public Color yellow, lightBlue, darkGreen, ironGrey;
+
 
 	// Use this for initialization
 	void Start () 
@@ -108,9 +120,10 @@ public class Caravan : MonoBehaviour
 				tileEvent = tileEventList.treasure;
 				Treasure ();
 			}
-			else if (i > b && i <= d) 
+			else if (i > b && i <= d && shops.GetComponent<ShopSystem> ().cargo.Count > 0) 
 			{
 				tileEvent = tileEventList.hazard;
+				Hazard();
 			}
 			else
 			{
@@ -142,63 +155,86 @@ public class Caravan : MonoBehaviour
 
 	void Ambush()
 	{
-		if (shops.GetComponent<ShopSystem> ().cargo.Count > 0) 
+		ambush.SetActive(true);
+
+		int j;
+
+		j = Random.Range (1, 21);
+
+		newDEF = def + j;
+		randDEF.text = newDEF.ToString();
+
+		bandit = shops.GetComponent<ShopSystem> ().cargo.Count * 2 + currentTile.GetComponent<Tile>().distFromTown;
+
+		j = Random.Range (1, 21);
+
+		bandit += j;
+		randATK.text = bandit.ToString();
+
+		if (shops.GetComponent<ShopSystem> ().cargo.Count > 0 && newDEF < bandit) 
 		{
-			int j;
+			
+			outcomeA.text = "Defeat";
+			outcomeA.color = Color.red;
 
-			j = Random.Range (1, 21);
+			int g = shops.GetComponent<ShopSystem> ().cargo.Count + 1;
+			j = Random.Range (0, shops.GetComponent<ShopSystem> ().cargo.Count - 1);
 
-			def += j;
-			def += help;
+			resultA.text = ("Bandits stole some " +  shops.GetComponent<ShopSystem> ().cargo[j].name + " and " + g + "G");
+			choiceSystem.GetComponent<MultipleChoice>().goldN -= g;
+			shops.GetComponent<ShopSystem> ().CargoTextAdd ();
 
 
-			bandit = shops.GetComponent<ShopSystem> ().cargo.Count * 2;
-
-			j = Random.Range (1, 21);
-
-			bandit += j;
-
-			if (def >= bandit) 
-			{
-				j = Random.Range (0, shops.GetComponent<ShopSystem> ().cargo.Count - 1);
-
-				print ("Bandits stole some " +  shops.GetComponent<ShopSystem> ().cargo[j].name);
-				shops.GetComponent<ShopSystem> ().cargo.RemoveAt (j);
-				shops.GetComponent<ShopSystem> ().CargoTextAdd ();
-			}
-			else 
-			{
-				print ("Safe");
-			}
 		} 
+
+		else if (shops.GetComponent<ShopSystem> ().cargo.Count == 0 && newDEF < bandit)
+		{
+			outcomeA.text = "Defeat";
+			outcomeA.color = Color.red;
+
+			resultA.text = ("Bandits stole 1G");
+			choiceSystem.GetComponent<MultipleChoice>().goldN -= 1;
+		}
 
 		else 
 		{
-			print ("Nope");
+			
+			outcomeA.text = "Victory";
+			outcomeA.color = Color.green;
+
+			resultA.text = ("Bandits were driven away");
+
 		}
 	}
 
 	void Treasure()
 	{
+		treasure.SetActive(true);
+
 		if (currentTile.name == "water") 
 		{
 			shops.GetComponent<ShopSystem> ().cargo.Add (shops.GetComponent<ShopSystem>().fish);
-			print ("Found some Fish");
+			outcomeT.text = ("Found some Fish");
+			outcomeT.color = lightBlue;
+
 		}
 		if (currentTile.name == "forest") 
 		{
 			shops.GetComponent<ShopSystem> ().cargo.Add (shops.GetComponent<ShopSystem>().lumber);
-			print ("Found some Lumber");
+			outcomeT.text = ("Found some Lumber");
+			outcomeT.color = darkGreen;
 		}
 		if (currentTile.name == "plain hill") 
 		{
 			shops.GetComponent<ShopSystem> ().cargo.Add (shops.GetComponent<ShopSystem>().iron);
-			print ("Found some Iron");
+			outcomeT.text = ("Found some Iron");
+			outcomeT.color = ironGrey;
 		}
 		if (currentTile.name == "plains") 
 		{
 			shops.GetComponent<ShopSystem> ().cargo.Add (shops.GetComponent<ShopSystem>().wheat);
-			print ("Found some Wheat");
+			outcomeT.text = ("Found some Wheat");
+			outcomeT.color = yellow;
 		}
 
 		shops.GetComponent<ShopSystem> ().CargoTextAdd ();
@@ -207,12 +243,61 @@ public class Caravan : MonoBehaviour
 		
 	void Hazard() 
 	{
+		hazard.SetActive(true);
+
 		int j;
 
-		j = Random.Range (0, shops.GetComponent<ShopSystem> ().cargo.Count);
-		shops.GetComponent<ShopSystem> ().cargo.RemoveAt (j);
-		shops.GetComponent<ShopSystem> ().CargoTextAdd ();
-		print ("Safe");
+		j = Random.Range (0, shops.GetComponent<ShopSystem> ().cargo.Count-1);
+		{
+			if (currentTile.name == "water") 
+			{
+				outcomeH.text = "You tried to caulk the wagon and ford the river";
+
+			}
+			else if (currentTile.name == "forest") 
+			{
+				outcomeH.text = "These woods are a little too dark for comfort";
+			}
+			else if (currentTile.name == "plain hill") 
+			{
+				outcomeH.text = "Venturing too close to a mine shaft has its consequences";
+			}
+			else if (currentTile.name == "plains") 
+			{
+				outcomeH.text = "turns out it's more of a marsh, you neeed to lighten the load";
+			}
+			else if (currentTile.name == "road") 
+			{
+				outcomeH.text = "potholes... everywhere";
+			}
+
+
+			string lost = shops.GetComponent<ShopSystem> ().cargo[j].name;
+
+			if (lost == "Wheat")
+			{
+				resultH.color = yellow;
+			}
+
+			else if (lost == "Fish")
+			{
+				resultH.color = lightBlue;
+			}
+			else if (lost == "Lumber")
+			{
+				resultH.color = darkGreen;
+			}
+			else if (lost == "Iron")
+			{
+				resultH.color = ironGrey;
+			}
+
+			resultH.text = "You lost some " + lost;
+			shops.GetComponent<ShopSystem> ().cargo.RemoveAt (j);
+			shops.GetComponent<ShopSystem> ().CargoTextAdd ();
+
+		}
+
 	}
 
 

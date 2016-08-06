@@ -13,7 +13,7 @@ public class WorldTime : MonoBehaviour
 
 	public int addtime, h, debt, days;
 	public float rotateClock, rotateSpeed, timePassing;
-	public bool am, start;
+	public bool am, start, day;
 
 	public Quaternion clockFromPos, clockToPos;
 
@@ -23,6 +23,8 @@ public class WorldTime : MonoBehaviour
 	// Use this for initialization
 	void Start () 
 	{
+		day = true;
+
 		days = 30;
 		daysT.text = days.ToString();
 
@@ -109,6 +111,7 @@ public class WorldTime : MonoBehaviour
 			{
 				sun.GetComponentInChildren<Light>().enabled = true;
 				caravan.GetComponent<Caravan>().danger = 1;
+				day = true;
 				if (camp.activeInHierarchy)
 				{
 					camp.SetActive(false);
@@ -118,6 +121,7 @@ public class WorldTime : MonoBehaviour
 			{
 				sun.GetComponentInChildren<Light>().enabled = false;
 				caravan.GetComponent<Caravan>().danger = 2;
+				day = false;
 				camp.SetActive(true);
 			}
 
@@ -198,6 +202,7 @@ public class WorldTime : MonoBehaviour
 
 		h = 5;
 		am = true;
+		day = true;
 
 		rotateSpeed = Time.time;
 

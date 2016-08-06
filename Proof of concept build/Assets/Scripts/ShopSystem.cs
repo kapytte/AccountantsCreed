@@ -204,17 +204,17 @@ public class ShopSystem : MonoBehaviour
 		{
 			outpostList[i].townName = towns[i].name + " " + i;
 
-			outpostList[i].wheatPrice = ((150 / towns[i].GetComponentInChildren<Town>().wheat) * 2);
+			outpostList[i].wheatPrice = (200 / towns[i].GetComponentInChildren<Town>().wheat);
 			outpostList[i].wheatPriceT.text = Mathf.CeilToInt(outpostList[i].wheatPrice).ToString();
 
-			outpostList[i].fishPrice = (100 / towns[i].GetComponentInChildren<Town>().fish) * 3;
+			outpostList[i].fishPrice = (150 / towns[i].GetComponentInChildren<Town>().fish) * 2;
 			outpostList[i].fishPriceT.text =Mathf.CeilToInt(outpostList[i].fishPrice).ToString();
 
-			outpostList[i].lumberPrice = (50 / towns[i].GetComponentInChildren<Town>().lumber) * 4;
+			outpostList[i].lumberPrice = (100 / towns[i].GetComponentInChildren<Town>().lumber) * 3;
 			outpostList[i].lumberPriceT.text = Mathf.CeilToInt(outpostList[i].lumberPrice).ToString();
 
-			outpostList[i].ironPrice = 200 / towns[i].GetComponentInChildren<Town>().iron;
-			outpostList[i].ironPriceT.text = Mathf.CeilToInt(outpostList[i].wheatPrice).ToString();
+			outpostList[i].ironPrice = (50 / towns[i].GetComponentInChildren<Town>().iron) * 4;
+			outpostList[i].ironPriceT.text = Mathf.CeilToInt(outpostList[i].ironPrice).ToString();
 		}
 	}
 

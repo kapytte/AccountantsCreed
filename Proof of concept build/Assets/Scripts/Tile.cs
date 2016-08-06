@@ -11,13 +11,13 @@ public class Tile : MonoBehaviour
 	public int resource; 
 	public float dist;
 	public int travelTime, ambushBase, treasureBase, hazardBase;
-	public int ambushMod, treasureMod, hazardMod;
+	public int ambushMod, treasureMod, hazardMod, distFromTown;
 	public int ambushChance, treasureChance, hazardChance, none;
 
 	public Collider[] surroundingTiles;
 	public List<GameObject> hexes = new List<GameObject>();
 
-	public GameObject caravan, clock, canvas, prev;
+	public GameObject caravan, clock, canvas, prev, shopSystem;
 
 
 
@@ -32,6 +32,7 @@ public class Tile : MonoBehaviour
 		caravan = GameObject.Find ("Caravan");
 		clock = GameObject.Find ("Time");
 		prev = GameObject.Find("PreviewText");
+		shopSystem = GameObject.Find("ShopSystem");
 
 	}
 
@@ -41,6 +42,8 @@ public class Tile : MonoBehaviour
 		ambushBase = 15;
 		treasureBase = 10;
 		hazardBase = 5;
+
+		DistFromTown();
 
 		available = true;
 
@@ -68,6 +71,24 @@ public class Tile : MonoBehaviour
 
 		AssignRisk ();
 	}
+
+	void DistFromTown()
+	{
+		distFromTown = 100;
+		for(int i = 0; i < shopSystem.GetComponent<ShopSystem>().towns.Count; i++)
+		{
+			int b = Mathf.CeilToInt (Vector3.Distance(transform.position, shopSystem.GetComponent<ShopSystem>().towns[i].transform.position));
+
+			if (b < distFromTown)
+			{
+		
+				distFromTown = b;
+			} 
+		}
+
+
+	}
+
 
 
 	void ColorChange()
@@ -141,26 +162,32 @@ public class Tile : MonoBehaviour
 				treasureBase *= 1;
 				hazardBase *= 2;
 			}
+			ambushBase += distFromTown;
+			treasureBase += distFromTown;
+			hazardBase += distFromTown;
 		}
 
-	}
-	void OnMouseEnter()
-	{
-		if (canMouseOver == true && canvas.activeInHierarchy == false) 
-		{
 
-//			string  = gameObject.name + "" + 
-			if (gameObject.name == "town")
-			{
-				prev.GetComponent<Text> ().text = gameObject.name;
-			}
-			else
-			{
-				int d = caravan.GetComponent<Caravan>().danger;
-				prev.GetComponent<Text> ().text = gameObject.name + "\n" + "\n" + "Ambush: " + ambushBase * d + "\n" + "Item Find: " + treasureBase + "\n" + "Hazard: " + hazardBase * d;
-			}
-		}
 	}
+//	void OnMouseEnter()
+//	{
+//		if (canMouseOver == true && canvas.activeInHierarchy == false) 
+//		{
+//
+////			string  = gameObject.name + "" + 
+//			if (gameObject.name == "town")
+//			{
+//				
+//
+//
+//			}
+//			else
+//			{
+//				int d = caravan.GetComponent<Caravan>().danger;
+//				prev.GetComponent<Text> ().text = gameObject.name + "\n" + "\n" + "Ambush: " + ambushBase * d + "\n" + "Item Find: " + treasureBase + "\n" + "Hazard: " + hazardBase * d;
+//			}
+//		}
+//	}
 
 	void OnMouseExit()
 	{
@@ -171,12 +198,22 @@ public class Tile : MonoBehaviour
 
 	void OnMouseOver()
 	{
-		if (canMouseOver == true && canvas.activeInHierarchy == false) 
+		if (canMouseOver == true && !UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject()) 
 		{
 			
 			if (gameObject.name == "town")
 			{
 				prev.GetComponent<Text> ().text = gameObject.name;
+
+				if (clock.GetComponent<WorldTime>().day)
+				{
+					prev.GetComponent<Text> ().text = gameObject.name + "\n" + "\n" + "[Open For Business]";
+				}
+				else
+				{
+					prev.GetComponent<Text> ().text = gameObject.name + "\n" + "\n" + "[Closed At Night]";
+
+				}
 			}
 			else
 			{
@@ -186,9 +223,16 @@ public class Tile : MonoBehaviour
 
 			if (Input.GetMouseButton (0))
 			{
-				caravan.GetComponent<NavMeshAgent> ().SetDestination (transform.position);
-				clock.GetComponent<WorldTime>().AddTime();
-				prev.GetComponent<Text> ().text = null;
+				if (gameObject.name == "town" && !clock.GetComponent<WorldTime>().day)
+				{
+					
+				}
+				else
+				{
+					caravan.GetComponent<NavMeshAgent> ().SetDestination (transform.position);
+					clock.GetComponent<WorldTime>().AddTime();
+					prev.GetComponent<Text> ().text = null;
+				}
 			}
 		}
 	}

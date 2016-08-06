@@ -30,6 +30,9 @@ public class Hex : MonoBehaviour
 
 		Physics.Raycast(center, transform.up, out h, 1f);
 
+
+
+
 	
 	}
 		
