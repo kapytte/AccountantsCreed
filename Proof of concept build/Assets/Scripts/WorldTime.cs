@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 public class WorldTime : MonoBehaviour
 {
-	public GameObject sun, caravan, townScreen, choice, camp;
+	public GameObject sun, caravan, townScreen, choice, camp, shops;
 	public Canvas mainC;
 	public Text hour, phase, debtT, daysT;
 
@@ -43,7 +43,6 @@ public class WorldTime : MonoBehaviour
 		{
 			SimulateDayCycle();
 		}
-			
 
 		ClosingTime();
 //		WakeUp();
@@ -111,6 +110,7 @@ public class WorldTime : MonoBehaviour
 			{
 				sun.GetComponentInChildren<Light>().enabled = true;
 				caravan.GetComponent<Caravan>().danger = 1;
+				shops.GetComponent<ShopSystem> ().Outpost ();
 				day = true;
 				if (camp.activeInHierarchy)
 				{
@@ -209,6 +209,8 @@ public class WorldTime : MonoBehaviour
 		clockFromPos = clockBG.transform.rotation;
 
 		clockToPos = new Quaternion(0, 0, 0.7f, 0.7f);
+
+		shops.GetComponent<ShopSystem> ().Outpost ();
 
 		sun.GetComponentInChildren<Light>().enabled = true;
 		caravan.GetComponent<Caravan>().danger = 1;

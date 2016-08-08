@@ -23,7 +23,7 @@ public class Economicron : MonoBehaviour
 	public RawImage canv1, canv2, canv3, canv4, leftPage, rightPage;
 	public GameObject content;
 	public float a, b, c, d, e, g, i, openSpeed;
-	public int h, page;
+	public int h, currentPage, page;
 	public bool one, running, open, close, closing;
 
 	public float speed;
@@ -33,14 +33,18 @@ public class Economicron : MonoBehaviour
 		leftPage.rectTransform.localScale = new Vector2(0,13.5f);
 		rightPage.rectTransform.localScale = new Vector2(0,13.5f);
 
-		page = 0;
+		currentPage = 0;
 
-		canv1.texture = bookPages[page].fade1;
-		canv2.texture = bookPages[page].fade2;
-		canv3.texture = bookPages[page].fade3;
-		canv4.texture = bookPages[page].text;
+		page = bookPages.Count - 1;
+
+		canv1.texture = bookPages[currentPage].fade1;
+		canv2.texture = bookPages[currentPage].fade2;
+		canv3.texture = bookPages[currentPage].fade3;
+		canv4.texture = bookPages[currentPage].text;
 
 		gameObject.SetActive(false);
+
+
 	}
 
 	// Update is called once per frame
@@ -78,14 +82,14 @@ public class Economicron : MonoBehaviour
 
 	public void OpenBook()
 	{
-		page = 0;
+		currentPage = 0;
 		goLeft.interactable = false;
 		goRight.interactable = true;
 
-		canv1.texture = bookPages[page].fade1;
-		canv2.texture = bookPages[page].fade2;
-		canv3.texture = bookPages[page].fade3;
-		canv4.texture = bookPages[page].text;
+		canv1.texture = bookPages[currentPage].fade1;
+		canv2.texture = bookPages[currentPage].fade2;
+		canv3.texture = bookPages[currentPage].fade3;
+		canv4.texture = bookPages[currentPage].text;
 
 		i += openSpeed * Time.deltaTime;
 
@@ -137,7 +141,7 @@ public class Economicron : MonoBehaviour
 	public void MoveLeft()
 	{
 		
-		page -= 1;
+		currentPage -= 1;
 		running = true;
 		StartCoroutine(Waiting());
 
@@ -146,7 +150,7 @@ public class Economicron : MonoBehaviour
 	public void MoveRight()
 	{
 
-		page += 1;
+		currentPage += 1;
 		running = true;
 		StartCoroutine(Waiting());
 
@@ -173,10 +177,10 @@ public class Economicron : MonoBehaviour
 		
 		yield return new WaitWhile(() => running == true);
 
-		canv1.texture = bookPages[page].fade1 as Texture;
-		canv2.texture = bookPages[page].fade2 as Texture;
-		canv3.texture = bookPages[page].fade3 as Texture;
-		canv4.texture = bookPages[page].text as Texture;
+		canv1.texture = bookPages[currentPage].fade1 as Texture;
+		canv2.texture = bookPages[currentPage].fade2 as Texture;
+		canv3.texture = bookPages[currentPage].fade3 as Texture;
+		canv4.texture = bookPages[currentPage].text as Texture;
 		running = true;
 
 		yield return new WaitWhile(() => running == true);
@@ -184,7 +188,7 @@ public class Economicron : MonoBehaviour
 		Cursor.lockState = CursorLockMode.None;
 		Cursor.visible = true;
 
-		if (page == 0)
+		if (currentPage == 0)
 		{
 			goLeft.interactable = false;
 		}
@@ -193,7 +197,7 @@ public class Economicron : MonoBehaviour
 			goLeft.interactable = true;
 		}
 
-		if (page == bookPages.Count - 1)
+		if (currentPage == page)
 		{
 			goRight.interactable = false;
 		}

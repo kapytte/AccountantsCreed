@@ -20,7 +20,6 @@ public class Tile : MonoBehaviour
 	public GameObject caravan, clock, canvas, prev, shopSystem;
 
 
-
 	public bool available, canMouseOver, currentTile;
 
 
@@ -98,6 +97,9 @@ public class Tile : MonoBehaviour
 			GetComponent<Renderer>().material.color = Color.red;
 			gameObject.name = "town";
 			gameObject.AddComponent<Town>();
+			ambushBase *= 0;
+			treasureBase *= 0;
+			hazardBase *= 0;
 
 		}
 
@@ -198,7 +200,7 @@ public class Tile : MonoBehaviour
 
 	void OnMouseOver()
 	{
-		if (canMouseOver == true && !UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject()) 
+		if (canMouseOver && !UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject() && !caravan.GetComponent<Caravan>().inEvent) 
 		{
 			
 			if (gameObject.name == "town")
@@ -232,6 +234,11 @@ public class Tile : MonoBehaviour
 					caravan.GetComponent<NavMeshAgent> ().SetDestination (transform.position);
 					clock.GetComponent<WorldTime>().AddTime();
 					prev.GetComponent<Text> ().text = null;
+
+					if (clock.GetComponent<WorldTime>().camp.activeInHierarchy)
+					{
+						clock.GetComponent<WorldTime> ().camp.GetComponent<Button> ().interactable = false;
+					}
 				}
 			}
 		}

@@ -23,6 +23,7 @@ public class Caravan : MonoBehaviour
 	public GameObject ambush, hazard;
 	public Text randDEF, randATK, outcomeA, resultA, outcomeH, resultH;
 	public int def, newDEF, bandit;
+	public bool inEvent;
 
 	//input for treasure
 	public GameObject treasure;
@@ -101,8 +102,15 @@ public class Caravan : MonoBehaviour
 
 	void OnTriggerEnter(Collider c)
 	{
-		
-		if (c.gameObject == currentTile) 
+
+		if (c.name == "town")
+		{
+			shops.GetComponent<ShopSystem>().town = c.gameObject;
+			townScreen.SetActive(true);
+			shops.GetComponent<ShopSystem>().MercsLeave();
+		}
+
+		else if (c.gameObject == currentTile) 
 		{
 			i = Random.Range (1, 101);
 
@@ -130,18 +138,12 @@ public class Caravan : MonoBehaviour
 				tileEvent = tileEventList.none;
 			}
 
+			if (time.GetComponent<WorldTime>().camp.activeInHierarchy)
+			{
+				time.GetComponent<WorldTime>().camp.GetComponent<Button>().interactable = true;
+			}
 		}
-
-		if (c.name == "town")
-		{
-			shops.GetComponent<ShopSystem>().town = c.gameObject;
-			townScreen.SetActive(true);
-//			GetComponent<NavMeshAgent>().enabled = false;
-//			GetComponent<Caravan>().enabled = false;
-			shops.GetComponent<ShopSystem>().MercsLeave();
-		}
-
-
+			
 	}
 		
 
@@ -156,6 +158,7 @@ public class Caravan : MonoBehaviour
 	void Ambush()
 	{
 		ambush.SetActive(true);
+		InEvent ();
 
 		int j;
 
@@ -207,9 +210,15 @@ public class Caravan : MonoBehaviour
 		}
 	}
 
+	public void InEvent()
+	{
+		inEvent = !inEvent;
+	}
+
 	void Treasure()
 	{
 		treasure.SetActive(true);
+		InEvent ();
 
 		if (currentTile.name == "water") 
 		{
@@ -244,6 +253,7 @@ public class Caravan : MonoBehaviour
 	void Hazard() 
 	{
 		hazard.SetActive(true);
+		InEvent ();
 
 		int j;
 
@@ -264,13 +274,12 @@ public class Caravan : MonoBehaviour
 			}
 			else if (currentTile.name == "plains") 
 			{
-				outcomeH.text = "turns out it's more of a marsh, you neeed to lighten the load";
+				outcomeH.text = "Turns out it's more of a marsh";
 			}
 			else if (currentTile.name == "road") 
 			{
-				outcomeH.text = "potholes... everywhere";
+				outcomeH.text = "Potholes... everywhere";
 			}
-
 
 			string lost = shops.GetComponent<ShopSystem> ().cargo[j].name;
 
