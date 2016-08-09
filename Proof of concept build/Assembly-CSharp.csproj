@@ -52,6 +52,7 @@
      <Compile Include="Assets\Scripts\MultipleChoice.cs" />
      <Compile Include="Assets\Scripts\QuestPreview.cs" />
      <Compile Include="Assets\Scripts\Questions.cs" />
+     <Compile Include="Assets\Scripts\Save.cs" />
      <Compile Include="Assets\Scripts\ShopSystem.cs" />
      <Compile Include="Assets\Scripts\Tile.cs" />
      <Compile Include="Assets\Scripts\Town.cs" />

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 public class WorldTime : MonoBehaviour
 {
-	public GameObject sun, caravan, townScreen, choice, camp, shops;
+	public GameObject sun, caravan, townScreen, choice, camp, shops, loseScreen, startScreen;
 	public Canvas mainC;
 	public Text hour, phase, debtT, daysT;
 
@@ -25,7 +25,7 @@ public class WorldTime : MonoBehaviour
 	{
 		day = true;
 
-		days = 30;
+		days = 10;
 		daysT.text = days.ToString();
 
 		debt = 20;
@@ -134,10 +134,18 @@ public class WorldTime : MonoBehaviour
 			if (days == 0) 
 			{
 				choice.GetComponent<MultipleChoice> ().goldN -= debt;
+				if (choice.GetComponent<MultipleChoice> ().goldN > 0) 
+				{
+					debt += 10;
+					debtT.text = debt.ToString ();
+					days = 10;
+					daysT.text = days.ToString ();
+				} 
+				else 
+				{
+					loseScreen.SetActive (true);
+				}
 
-				debt += 10;
-				debtT.text = debt.ToString ();
-				days = 30;
 			}
 
 			if (roster.Capacity > 0)
@@ -220,6 +228,15 @@ public class WorldTime : MonoBehaviour
 		}
 
 		caravan.GetComponent<Caravan>().currentTile.GetComponent<Tile>().ShuffleAll();
+
+		if (days == 0) 
+		{
+			choice.GetComponent<MultipleChoice> ().goldN -= debt;
+
+			debt += 10;
+			debtT.text = debt.ToString ();
+			days = 10;
+		}
 
 		start = true;
 	}

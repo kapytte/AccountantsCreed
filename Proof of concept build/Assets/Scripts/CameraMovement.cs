@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class CameraMovement : MonoBehaviour 
 {
@@ -10,6 +11,8 @@ public class CameraMovement : MonoBehaviour
 	public bool LockedCamera;
 
 	public Vector3 startPos, startRot;
+
+	public Text cameraLock;
 
 	public float f;
 
@@ -36,12 +39,25 @@ public class CameraMovement : MonoBehaviour
 			else
 				Follow ();
 
-			if (Input.GetKeyDown (KeyCode.F)) 
-			{
-				LockedCamera = !LockedCamera;
-				smooth = 3;
-			}
+			CameraSwitch ();
 
+		}
+	}
+
+	void CameraSwitch()
+	{
+		if (Input.GetKeyDown (KeyCode.F) && LockedCamera) 
+		{
+			cameraLock.text = "Camera Locked [F]";
+			LockedCamera = !LockedCamera;
+			smooth = 3;
+		}
+
+		else if (Input.GetKeyDown (KeyCode.F) && !LockedCamera) 
+		{
+			cameraLock.text = "Camera Unlocked [F]";
+			LockedCamera = !LockedCamera;
+			smooth = 3;
 		}
 	}
 

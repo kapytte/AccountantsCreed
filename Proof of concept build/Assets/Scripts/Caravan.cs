@@ -183,6 +183,7 @@ public class Caravan : MonoBehaviour
 			int g = shops.GetComponent<ShopSystem> ().cargo.Count + 1;
 			j = Random.Range (0, shops.GetComponent<ShopSystem> ().cargo.Count - 1);
 
+
 			resultA.text = ("Bandits stole some " +  shops.GetComponent<ShopSystem> ().cargo[j].name + " and " + g + "G");
 			choiceSystem.GetComponent<MultipleChoice>().goldN -= g;
 			shops.GetComponent<ShopSystem> ().CargoTextAdd ();

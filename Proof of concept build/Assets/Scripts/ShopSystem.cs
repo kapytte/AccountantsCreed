@@ -186,16 +186,22 @@ public class ShopSystem : MonoBehaviour
 			bG.interactable = false;
 	}
 
+	public void YouAreHere()
+	{
+		for (int i = 0; i < outpostList.Count; i++) 
+		{
+			if (towns [i].gameObject.transform.position == town.transform.position)
+				outpostList [i].youAreHere.enabled = true;
+			else
+				outpostList [i].youAreHere.enabled = false;
+		}
+	}
+
 	public void Outpost()
 	{
 		for (int i = 0; i < outpostList.Count; i++)
 		{
 			outpostList[i].townName = towns[i].name + " " + i;
-
-			if (towns [i].gameObject.transform.position == town.transform.position)
-				outpostList [i].youAreHere.enabled = true;
-			else
-				outpostList [i].youAreHere.enabled = false;
 
 			outpostList[i].wheatPrice = (200 / towns[i].GetComponentInChildren<Town>().wheat);
 			outpostList[i].wheatPriceT.text = Mathf.CeilToInt(outpostList[i].wheatPrice).ToString() + "G";
