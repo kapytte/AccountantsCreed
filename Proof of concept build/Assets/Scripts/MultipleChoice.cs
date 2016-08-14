@@ -12,7 +12,8 @@ using UnityEngine.Analytics;
 public class EasyQuestions 
 {
 	//Question input variables
-	public string preview;
+	public string topic;
+
 	public string question;
 	public string optionA;
 	public string optionB;
@@ -61,7 +62,10 @@ public class MultipleChoice : MonoBehaviour
 
 		//checks for mouse over quest icons
 	
-		Preview();
+		if (prevN != 0)
+		{
+			Preview();
+		}
 
 		//ensures reputation does not go below 0
 		if (repN <=0)
@@ -163,7 +167,7 @@ public class MultipleChoice : MonoBehaviour
 		{
 			//show green text and add gold & reputation 
 			question.color = Color.green;
-			question.text = "Correct";
+			question.text = "Good Advice";
 			repN += lvl1Quest[randomDraw[choiceQ-1]].reputation;
 			metrics.GetComponent<Metrics>().questionsRight += 1;
 		}
@@ -173,7 +177,7 @@ public class MultipleChoice : MonoBehaviour
 		{
 			//show red text and remove reputation
 			question.color = Color.red;
-			question.text = "Incorrect";
+			question.text = "Bad Advice";
 			repN -= lvl1Quest[randomDraw[choiceQ-1]].reputation;
 			metrics.GetComponent<Metrics>().questionsWrong += 1;
 		}
@@ -239,27 +243,32 @@ public class MultipleChoice : MonoBehaviour
 	//calls if hovering over quest icons
 	void Preview()
 	{
-		//checks value thrown to this script by button
-		switch(prevN)
-		{
-		//if zero, show nothing. Otherwise show corrosponding preview
+		preview.text = 
+			lvl1Quest[randomDraw[prevN-1]].topic + "\n" + "\n" + "Page " + 
+			lvl1Quest[randomDraw[prevN-1]].PageNum + "\n" + "\n" + "Cred " + 
+			lvl1Quest[randomDraw[prevN-1]].reputation;
 
-		case 1:
-			preview.text = lvl1Quest[randomDraw[0]].preview;
-			break;
-
-		case 2:
-			preview.text = lvl1Quest[randomDraw[1]].preview;
-			break;
-
-		case 3:
-			preview.text = lvl1Quest[randomDraw[2]].preview;
-			break;
-
-		case 4:
-			preview.text = lvl1Quest[randomDraw[3]].preview;
-			break;
-		}
+//		//checks value thrown to this script by button
+//		switch(prevN)
+//		{
+//		//if zero, show nothing. Otherwise show corrosponding preview
+//
+//		case 1:
+//			preview.text = lvl1Quest[randomDraw[0]].topic;
+//			break;
+//
+//		case 2:
+//			preview.text = lvl1Quest[randomDraw[1]].topic;
+//			break;
+//
+//		case 3:
+//			preview.text = lvl1Quest[randomDraw[2]].topic;
+//			break;
+//
+//		case 4:
+//			preview.text = lvl1Quest[randomDraw[3]].topic;
+//			break;
+//		}
 	}
 
 	//generates a quest from the random generator
