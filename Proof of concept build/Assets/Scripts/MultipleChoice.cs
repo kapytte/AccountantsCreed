@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-
+using UnityEngine.Analytics;
 
 
 //Questions in this section pulled from the Basic accounting test located at www.myaccountingcourse.com/accounting-basic/multiple-choice
@@ -31,12 +31,12 @@ public class MultipleChoice : MonoBehaviour
 	public Text preview, goldS, repS;
 	public Text question, buttonA, buttonB, buttonC, buttonD, correct;
 	public int goldN, repN, maxQ, choiceQ, prevN, questGiver;
-	public bool questActive;
+	public bool questActive, startTimer;
 	public RawImage questionArea;
 	public string decision;
+	public float timerW;
 
-
-	public GameObject shops, town;
+	public GameObject shops, town, clock, metrics, winScreen;
 
 	//random number and quest lists
 	public List <EasyQuestions> lvl1Quest;
@@ -46,11 +46,18 @@ public class MultipleChoice : MonoBehaviour
 	{
 		//spawns quests at start
 		GenerateQuest();
+
+		metrics = GameObject.Find("Metrics");
 	}
 
 	void Update()
 	{
 		town = shops.GetComponent<ShopSystem>().town;
+
+		if (metrics == null)
+		{
+			metrics = GameObject.Find("Metrics");
+		}
 
 		//checks for mouse over quest icons
 	
@@ -72,7 +79,17 @@ public class MultipleChoice : MonoBehaviour
 			QuestAmount();
 		}
 
+		if (startTimer)
+		{
+			WindowTimer();
+		}
+
 		CanQuest();
+	}
+
+	void WindowTimer()
+	{
+		timerW += Time.deltaTime;
 	}
 
 	//begins quiz
@@ -81,7 +98,8 @@ public class MultipleChoice : MonoBehaviour
 		//ensures preview window is null
 		preview.text = "";
 
-		questActive  = true;
+		startTimer = true;
+		questActive = true;
 
 		//opens question window
 		questionArea.gameObject.SetActive(true);
@@ -138,6 +156,8 @@ public class MultipleChoice : MonoBehaviour
 		buttonC.GetComponentInParent<Button>().interactable = false;
 		buttonD.GetComponentInParent<Button>().interactable = false;
 
+		startTimer = false;
+
 		//checks answer against template, if true..
 		if (decision == lvl1Quest[randomDraw[choiceQ-1]].answer)
 		{
@@ -145,6 +165,7 @@ public class MultipleChoice : MonoBehaviour
 			question.color = Color.green;
 			question.text = "Correct";
 			repN += lvl1Quest[randomDraw[choiceQ-1]].reputation;
+			metrics.GetComponent<Metrics>().questionsRight += 1;
 		}
 
 		//if false..
@@ -154,6 +175,7 @@ public class MultipleChoice : MonoBehaviour
 			question.color = Color.red;
 			question.text = "Incorrect";
 			repN -= lvl1Quest[randomDraw[choiceQ-1]].reputation;
+			metrics.GetComponent<Metrics>().questionsWrong += 1;
 		}
 
 		//enable continue button
@@ -203,6 +225,16 @@ public class MultipleChoice : MonoBehaviour
 	}
 
 
+	void DidIWin()
+	{
+		if (repN >= 100)
+		{
+			winScreen.SetActive(true);
+			metrics.GetComponent<Metrics>().gameState = "Won Game";
+			metrics.GetComponent<Metrics>().LevelStats();
+		}
+	}
+
 
 	//calls if hovering over quest icons
 	void Preview()
@@ -233,6 +265,19 @@ public class MultipleChoice : MonoBehaviour
 	//generates a quest from the random generator
 	public void GenerateQuest()
 	{
+		Analytics.CustomEvent("Question", new Dictionary<string, object>
+			{
+				{"Day", clock.GetComponent<WorldTime>().days},
+				{"Week", clock.GetComponent<WorldTime>().week},
+				{"Cred", repN},
+				{"Question", lvl1Quest[randomDraw[choiceQ-1]].question},
+				{"Answer", lvl1Quest[randomDraw[choiceQ-1]].answer},
+				{"Result", decision},
+				{"WindowTime", timerW}
+			});
+
+		timerW = 0;
+
 		town.GetComponent<Town>().questGivers -= 1;
 
 		//disables quest window and continue button

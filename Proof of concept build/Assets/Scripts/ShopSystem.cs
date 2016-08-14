@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using UnityEngine.Analytics;
 
 [System.Serializable]
 public class townPrice
@@ -31,7 +32,7 @@ public class ShopSystem : MonoBehaviour
 	public bool hasMercs;
 	public int g, def, mercCost;
 
-	public GameObject town, caravan, questGiver;
+	public GameObject town, caravan, questGiver, metrics;
 
 	public List <GameObject> cargo = new List<GameObject>(); 
 	public List <Text> inv = new List<Text>(); 
@@ -50,11 +51,17 @@ public class ShopSystem : MonoBehaviour
 		StartCoroutine(townSpawn());
 
 		Outpost ();
+
+		metrics = GameObject.Find("Metrics");
+
 	}
 
 	void Update()
 	{
-
+		if (metrics == null)
+		{
+			metrics = GameObject.Find("Metrics");
+		}
 
 		if (town != null)
 		{
@@ -225,6 +232,7 @@ public class ShopSystem : MonoBehaviour
 		caravan.GetComponent<Caravan>().defT.text = def.ToString();
 
 		questGiver.GetComponent<MultipleChoice>().goldN -= mercCost;
+		metrics.GetComponent<Metrics>().goldNeg -= mercCost;
 		hasMercs = true;
 	}
 
@@ -267,6 +275,8 @@ public class ShopSystem : MonoBehaviour
 	{
 		town.GetComponent<Town>().lumber -= 1;
 		questGiver.GetComponent<MultipleChoice>().goldN -= Mathf.CeilToInt (lumberPrice);
+		metrics.GetComponent<Metrics>().goldNeg -= Mathf.CeilToInt (lumberPrice);
+		metrics.GetComponent<Metrics>().buyGoods += 1;
 		cargo.Add(lumber);
 		CargoTextAdd ();
 		MercsLeave();
@@ -275,6 +285,8 @@ public class ShopSystem : MonoBehaviour
 	{
 		town.GetComponent<Town>().fish -= 1;
 		questGiver.GetComponent<MultipleChoice>().goldN -= Mathf.CeilToInt (fishPrice);
+		metrics.GetComponent<Metrics>().goldNeg -= Mathf.CeilToInt (fishPrice);
+		metrics.GetComponent<Metrics>().buyGoods += 1;
 		cargo.Add(fish);
 		CargoTextAdd ();
 		MercsLeave();
@@ -283,6 +295,8 @@ public class ShopSystem : MonoBehaviour
 	{
 		town.GetComponent<Town>().iron -= 1;
 		questGiver.GetComponent<MultipleChoice>().goldN -= Mathf.CeilToInt (ironPrice);
+		metrics.GetComponent<Metrics>().goldNeg -= Mathf.CeilToInt (ironPrice);
+		metrics.GetComponent<Metrics>().buyGoods += 1;
 		cargo.Add(iron);
 		CargoTextAdd ();
 		MercsLeave();
@@ -291,6 +305,8 @@ public class ShopSystem : MonoBehaviour
 	{
 		town.GetComponent<Town>().wheat -= 1;
 		questGiver.GetComponent<MultipleChoice>().goldN -= Mathf.CeilToInt (wheatPrice);
+		metrics.GetComponent<Metrics>().goldNeg -= Mathf.CeilToInt (wheatPrice);
+		metrics.GetComponent<Metrics>().buyGoods += 1;
 		cargo.Add(wheat);
 		CargoTextAdd ();
 		MercsLeave();
@@ -300,6 +316,8 @@ public class ShopSystem : MonoBehaviour
 	{
 		cargo.Remove (lumber);
 		questGiver.GetComponent<MultipleChoice> ().goldN += Mathf.CeilToInt (lumberPrice);
+		metrics.GetComponent<Metrics>().goldPos += Mathf.CeilToInt (lumberPrice);
+		metrics.GetComponent<Metrics>().sellGoods += 1;
 		town.GetComponent<Town> ().lumber += 1;
 		CargoTextAdd ();
 		MercsLeave();
@@ -309,6 +327,8 @@ public class ShopSystem : MonoBehaviour
 	{
 		cargo.Remove (fish);
 		questGiver.GetComponent<MultipleChoice> ().goldN += Mathf.CeilToInt (fishPrice);
+		metrics.GetComponent<Metrics>().goldPos += Mathf.CeilToInt (fishPrice);
+		metrics.GetComponent<Metrics>().sellGoods += 1;
 		town.GetComponent<Town> ().fish += 1;
 		CargoTextAdd ();
 		MercsLeave();
@@ -317,6 +337,8 @@ public class ShopSystem : MonoBehaviour
 	{
 		cargo.Remove (iron);
 		questGiver.GetComponent<MultipleChoice> ().goldN += Mathf.CeilToInt (ironPrice);
+		metrics.GetComponent<Metrics>().goldPos += Mathf.CeilToInt (ironPrice);
+		metrics.GetComponent<Metrics>().sellGoods += 1;
 		town.GetComponent<Town> ().iron += 1;
 		CargoTextAdd ();
 		MercsLeave();
@@ -326,6 +348,8 @@ public class ShopSystem : MonoBehaviour
 	{
 		cargo.Remove (wheat);
 		questGiver.GetComponent<MultipleChoice> ().goldN += Mathf.CeilToInt (wheatPrice);
+		metrics.GetComponent<Metrics>().goldPos += Mathf.CeilToInt (wheatPrice);
+		metrics.GetComponent<Metrics>().sellGoods += 1;
 		town.GetComponent<Town> ().wheat += 1;
 		CargoTextAdd ();
 		MercsLeave();
@@ -340,6 +364,7 @@ public class ShopSystem : MonoBehaviour
 		hasMercs = false;
 		MercCost();
 	}
+
 }
 
 

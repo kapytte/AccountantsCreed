@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using UnityEngine.Analytics;
 
 [RequireComponent (typeof(Material), typeof(MeshCollider), typeof(Rigidbody))]
 public class Tile : MonoBehaviour 
@@ -23,6 +24,7 @@ public class Tile : MonoBehaviour
 	public bool available, canMouseOver, currentTile;
 
 
+
 	public int c;
 
 	void Awake()
@@ -32,6 +34,8 @@ public class Tile : MonoBehaviour
 		clock = GameObject.Find ("Time");
 		prev = GameObject.Find("PreviewText");
 		shopSystem = GameObject.Find("ShopSystem");
+
+
 
 	}
 
@@ -80,7 +84,6 @@ public class Tile : MonoBehaviour
 
 			if (b < distFromTown)
 			{
-		
 				distFromTown = b;
 			} 
 		}
@@ -239,6 +242,10 @@ public class Tile : MonoBehaviour
 					{
 						clock.GetComponent<WorldTime> ().camp.GetComponent<Button> ().interactable = false;
 					}
+
+				
+
+
 				}
 			}
 		}

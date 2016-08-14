@@ -82,3 +82,5 @@ C:\Users\kpytte\Documents\GitHub\AccountantsCreed\Proof of concept build\Temp\bi
 C:\Users\kpytte\Documents\GitHub\AccountantsCreed\Proof of concept build\obj\Debug\Assembly-CSharp.csprojResolveAssemblyReference.cache
 C:\Users\kpytte\Documents\GitHub\AccountantsCreed\Proof of concept build\obj\Debug\Assembly-CSharp.dll
 C:\Users\kpytte\Documents\GitHub\AccountantsCreed\Proof of concept build\obj\Debug\Assembly-CSharp.pdb
+C:\Users\Karl\Documents\GitHub\AccountantsCreed\Proof of concept build\Temp\bin\Debug\UnityEngine.Analytics.dll
+C:\Users\Karl\Documents\GitHub\AccountantsCreed\Proof of concept build\Temp\bin\Debug\UnityEngine.Analytics.xml

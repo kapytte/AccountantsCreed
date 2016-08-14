@@ -5,13 +5,13 @@ using System.Collections.Generic;
 
 public class WorldTime : MonoBehaviour
 {
-	public GameObject sun, caravan, townScreen, choice, camp, shops, loseScreen, startScreen;
+	public GameObject sun, caravan, townScreen, choice, camp, shops, loseScreen, startScreen, metrics;
 	public Canvas mainC;
 	public Text hour, phase, debtT, daysT;
 
 	public Image clockBG;
 
-	public int addtime, h, debt, days;
+	public int addtime, h, debt, days, week;
 	public float rotateClock, rotateSpeed, timePassing;
 	public bool am, start, day;
 
@@ -30,6 +30,9 @@ public class WorldTime : MonoBehaviour
 
 		debt = 20;
 		debtT.text = debt.ToString ();
+
+		metrics = GameObject.Find("Metrics");
+		metrics.GetComponent<Metrics>().repeats += 1;
 	}
 	
 	// Update is called once per frame
@@ -59,9 +62,6 @@ public class WorldTime : MonoBehaviour
 		{
 			start = false;
 		}
-
-
-
 	}
 
 	void Clock()
@@ -128,23 +128,13 @@ public class WorldTime : MonoBehaviour
 			if (h == 11 && am == false) 
 			{
 				days -= 1;
+				metrics.GetComponent<Metrics>().days += 1;
 				daysT.text = days.ToString ();
 			}
 
 			if (days == 0) 
 			{
-				choice.GetComponent<MultipleChoice> ().goldN -= debt;
-				if (choice.GetComponent<MultipleChoice> ().goldN > 0) 
-				{
-					debt += 10;
-					debtT.text = debt.ToString ();
-					days = 10;
-					daysT.text = days.ToString ();
-				} 
-				else 
-				{
-					loseScreen.SetActive (true);
-				}
+				Day0();
 
 			}
 
@@ -206,6 +196,8 @@ public class WorldTime : MonoBehaviour
 		{
 			days -= 1;
 			daysT.text = days.ToString ();
+
+			metrics.GetComponent<Metrics>().days += 1;
 		}
 
 		h = 5;
@@ -231,15 +223,29 @@ public class WorldTime : MonoBehaviour
 
 		if (days == 0) 
 		{
-			choice.GetComponent<MultipleChoice> ().goldN -= debt;
-
-			debt += 10;
-			debtT.text = debt.ToString ();
-			days = 10;
+			Day0();
 		}
 
 		start = true;
 	}
 
-	
+	void Day0()
+	{
+		choice.GetComponent<MultipleChoice> ().goldN -= debt;
+		if (choice.GetComponent<MultipleChoice> ().goldN > 0) 
+		{
+			debt += 10;
+			debtT.text = debt.ToString ();
+			days = 10;
+			daysT.text = days.ToString ();
+		} 
+		else 
+		{
+			loseScreen.SetActive (true);
+			metrics.GetComponent<Metrics>().gameState = "Lost Game";
+			metrics.GetComponent<Metrics>().LevelStats();
+		}
+
+		week += 1;
+	}
 }

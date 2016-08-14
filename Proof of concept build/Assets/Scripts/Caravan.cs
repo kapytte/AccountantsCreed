@@ -9,7 +9,7 @@ using UnityEngine.UI;
 public class Caravan : MonoBehaviour
 {
 
-	public GameObject shops, townScreen, currentTile, time, choiceSystem;
+	public GameObject shops, townScreen, currentTile, time, choiceSystem, metrics;
 
 	public LayerMask hexLayer;
 
@@ -47,6 +47,8 @@ public class Caravan : MonoBehaviour
 		defT.text = def.ToString();
 
 		danger = 1;
+
+		metrics = GameObject.Find("Metrics");
 	}
 	
 	// Update is called once per frame
@@ -123,7 +125,7 @@ public class Caravan : MonoBehaviour
 				tileEvent = tileEventList.ambush;
 				Ambush ();
 			}
-			else if (i > a && i <= b) 
+			else if (i > a && i <= b && shops.GetComponent<ShopSystem> ().cargo.Count < 10) 
 			{
 				tileEvent = tileEventList.treasure;
 				Treasure ();
@@ -167,12 +169,17 @@ public class Caravan : MonoBehaviour
 		newDEF = def + j;
 		randDEF.text = newDEF.ToString();
 
-		bandit = shops.GetComponent<ShopSystem> ().cargo.Count * 2 + currentTile.GetComponent<Tile>().distFromTown;
+//		if (shops.GetComponent<ShopSystem> ().cargo.Count > 0)
+			bandit = shops.GetComponent<ShopSystem> ().cargo.Count * 2 + currentTile.GetComponent<Tile>().distFromTown;
+//		else
+//			bandit = currentTile.GetComponent<Tile>().distFromTown;
 
 		j = Random.Range (1, 21);
 
 		bandit += j;
 		randATK.text = bandit.ToString();
+
+		int g = Mathf.CeilToInt(choiceSystem.GetComponent<MultipleChoice>().goldN * 0.1f);
 
 		if (shops.GetComponent<ShopSystem> ().cargo.Count > 0 && newDEF < bandit) 
 		{
@@ -180,15 +187,17 @@ public class Caravan : MonoBehaviour
 			outcomeA.text = "Defeat";
 			outcomeA.color = Color.red;
 
-			int g = shops.GetComponent<ShopSystem> ().cargo.Count + 1;
+
 			j = Random.Range (0, shops.GetComponent<ShopSystem> ().cargo.Count - 1);
 
 
 			resultA.text = ("Bandits stole some " +  shops.GetComponent<ShopSystem> ().cargo[j].name + " and " + g + "G");
+			shops.GetComponent<ShopSystem> ().cargo.RemoveAt(j);
 			choiceSystem.GetComponent<MultipleChoice>().goldN -= g;
 			shops.GetComponent<ShopSystem> ().CargoTextAdd ();
 
-
+			metrics.GetComponent<Metrics>().goldNeg -= g;
+			metrics.GetComponent<Metrics>().banditsNeg += 1;
 		} 
 
 		else if (shops.GetComponent<ShopSystem> ().cargo.Count == 0 && newDEF < bandit)
@@ -196,8 +205,12 @@ public class Caravan : MonoBehaviour
 			outcomeA.text = "Defeat";
 			outcomeA.color = Color.red;
 
-			resultA.text = ("Bandits stole 1G");
-			choiceSystem.GetComponent<MultipleChoice>().goldN -= 1;
+			resultA.text = ("Bandits stole " + g + "G");
+			choiceSystem.GetComponent<MultipleChoice>().goldN -= g;
+
+			metrics.GetComponent<Metrics>().goldNeg -= g;
+			metrics.GetComponent<Metrics>().banditsNeg += 1;
+
 		}
 
 		else 
@@ -207,7 +220,7 @@ public class Caravan : MonoBehaviour
 			outcomeA.color = Color.green;
 
 			resultA.text = ("Bandits were driven away");
-
+			metrics.GetComponent<Metrics>().banditsPos += 1;
 		}
 	}
 
@@ -220,6 +233,8 @@ public class Caravan : MonoBehaviour
 	{
 		treasure.SetActive(true);
 		InEvent ();
+
+		metrics.GetComponent<Metrics>().treasure += 1;
 
 		if (currentTile.name == "water") 
 		{
@@ -255,6 +270,8 @@ public class Caravan : MonoBehaviour
 	{
 		hazard.SetActive(true);
 		InEvent ();
+
+		metrics.GetComponent<Metrics>().hazards += 1;
 
 		int j;
 
