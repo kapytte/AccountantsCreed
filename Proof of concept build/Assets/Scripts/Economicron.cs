@@ -82,7 +82,6 @@ public class Economicron : MonoBehaviour
 
 	public void OpenBook()
 	{
-		currentPage = 0;
 		goLeft.interactable = false;
 		goRight.interactable = true;
 
@@ -102,8 +101,6 @@ public class Economicron : MonoBehaviour
 		}
 		else 
 		{
-			
-
 			closeButton.enabled = true;
 
 			running = true;
@@ -132,6 +129,8 @@ public class Economicron : MonoBehaviour
 			Cursor.visible = true;
 			close = false;
 			gameObject.SetActive(false);
+			currentPage = 0;
+
 		}
 
 	}
@@ -176,6 +175,7 @@ public class Economicron : MonoBehaviour
 	{
 		
 		yield return new WaitWhile(() => running == true);
+		Cursor.visible = false;
 
 		canv1.texture = bookPages[currentPage].fade1 as Texture;
 		canv2.texture = bookPages[currentPage].fade2 as Texture;
@@ -183,9 +183,13 @@ public class Economicron : MonoBehaviour
 		canv4.texture = bookPages[currentPage].text as Texture;
 		running = true;
 
+		StartCoroutine (KeepWaiting());
+	}
+
+	IEnumerator KeepWaiting()
+	{
 		yield return new WaitWhile(() => running == true);
 
-		Cursor.lockState = CursorLockMode.None;
 		Cursor.visible = true;
 
 		if (currentPage == 0)

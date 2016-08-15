@@ -30,14 +30,14 @@ public class MultipleChoice : MonoBehaviour
 	
 	public Button q1, q2, q3, q4, cont;
 	public Text preview, goldS, repS;
-	public Text question, buttonA, buttonB, buttonC, buttonD, correct;
+	public Text question, buttonA, buttonB, buttonC, buttonD;
 	public int goldN, repN, maxQ, choiceQ, prevN, questGiver;
 	public bool questActive, startTimer;
 	public RawImage questionArea;
 	public string decision;
 	public float timerW;
 
-	public GameObject shops, town, clock, metrics, winScreen;
+	public GameObject shops, town, clock, metrics, winScreen, ecnonom;
 
 	//random number and quest lists
 	public List <EasyQuestions> lvl1Quest;
@@ -131,6 +131,18 @@ public class MultipleChoice : MonoBehaviour
 
 	}
 		
+	public void Hint()
+	{
+		int i = lvl1Quest [randomDraw [choiceQ - 1]].PageNum;
+
+		int j = Mathf.CeilToInt (i / 2);
+
+		ecnonom.GetComponent<Economicron> ().currentPage = j; 
+
+	}
+
+
+
 	void CanQuest()
 	{
 		if (shops.GetComponent<ShopSystem>().market.isActiveAndEnabled == true || 
@@ -293,7 +305,7 @@ public class MultipleChoice : MonoBehaviour
 		questionArea.gameObject.SetActive(false);
 		cont.gameObject.SetActive(false);
 
-		questActive  = false;
+		questActive = false;
 
 		town.GetComponent<Town>().GenerateQuest();
 
