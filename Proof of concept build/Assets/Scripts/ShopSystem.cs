@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using UnityEngine.Analytics;
+using UnityEngine.SceneManagement;
 
 [System.Serializable]
 public class townPrice
@@ -30,12 +31,14 @@ public class ShopSystem : MonoBehaviour
 
 	public float fishPrice, lumberPrice, ironPrice, wheatPrice;
 	public bool hasMercs;
-	public int g, def, mercCost;
+	public int g, def, mercCost, scene, outpostNum;
 
 	public GameObject town, caravan, questGiver, metrics;
 
 	public List <GameObject> cargo = new List<GameObject>(); 
 	public List <Text> inv = new List<Text>(); 
+
+
 
 	void Start()
 	{
@@ -48,15 +51,29 @@ public class ShopSystem : MonoBehaviour
 		sG.interactable = false;
 		sI.interactable = false;
 
-		StartCoroutine(townSpawn());
-
-		Outpost ();
 
 		metrics = GameObject.Find("Metrics");
 
+		scene = SceneManager.GetActiveScene().buildIndex;
 	}
 
 	void Update()
+	{
+		scene = SceneManager.GetActiveScene().buildIndex;
+
+		if (scene == 1)
+		{
+			MainGameFunctions();
+		}
+
+		if (scene == 2)
+		{
+			TutorialFunctions();
+		}
+
+	}
+
+	void MainGameFunctions()
 	{
 		if (metrics == null)
 		{
@@ -108,13 +125,25 @@ public class ShopSystem : MonoBehaviour
 				}
 			} 
 		}
-
 	}
 
-	IEnumerator townSpawn()
+	void TutorialFunctions()
 	{
-		yield return new WaitForSeconds(2f);
-		Outpost();
+		fishPrice = outpostList[outpostNum].fishPrice;
+		lumberPrice = outpostList[outpostNum].lumberPrice;
+		ironPrice = outpostList[outpostNum].ironPrice;
+		wheatPrice = outpostList[outpostNum].wheatPrice;
+
+		uFish.text = (Mathf.Round(150 - (fishPrice / .1f))).ToString();
+		uLumber.text = (Mathf.Round(100 - (lumberPrice / 0.2f))).ToString();
+		UIron.text = (Mathf.Round(50 - (ironPrice / 0.6f))).ToString();
+		uGold.text = (Mathf.Round(200 - (wheatPrice / 0.05f))).ToString();
+
+		priceF.text = Mathf.CeilToInt (fishPrice).ToString() + "G";
+		priceL.text = Mathf.CeilToInt (lumberPrice).ToString() + "G";
+		priceI.text = Mathf.CeilToInt (ironPrice).ToString() + "G";
+		priceG.text = Mathf.CeilToInt (wheatPrice).ToString() + "G";
+
 	}
 
 	public void CargoTextAdd()
@@ -210,16 +239,16 @@ public class ShopSystem : MonoBehaviour
 		{
 			outpostList[i].townName = towns[i].name + " " + i;
 
-			outpostList[i].wheatPrice = (200 / towns[i].GetComponentInChildren<Town>().wheat);
+			outpostList[i].wheatPrice = (200 - towns[i].GetComponentInChildren<Town>().wheat) * 0.1f;
 			outpostList[i].wheatPriceT.text = Mathf.CeilToInt(outpostList[i].wheatPrice).ToString() + "G";
 
-			outpostList[i].fishPrice = (150 / towns[i].GetComponentInChildren<Town>().fish) * 2;
-			outpostList[i].fishPriceT.text =Mathf.CeilToInt(outpostList[i].fishPrice).ToString() + "G";
+			outpostList[i].fishPrice = (150 - towns[i].GetComponentInChildren<Town>().fish) * 0.2f;
+			outpostList[i].fishPriceT.text = Mathf.CeilToInt(outpostList[i].fishPrice).ToString() + "G";
 
-			outpostList[i].lumberPrice = (100 / towns[i].GetComponentInChildren<Town>().lumber) * 3;
+			outpostList[i].lumberPrice = (100 - towns[i].GetComponentInChildren<Town>().lumber) * 0.3f;
 			outpostList[i].lumberPriceT.text = Mathf.CeilToInt(outpostList[i].lumberPrice).ToString() + "G";
 
-			outpostList[i].ironPrice = (50 / towns[i].GetComponentInChildren<Town>().iron) * 4;
+			outpostList[i].ironPrice = (50 - towns[i].GetComponentInChildren<Town>().iron) * 0.4f;
 			outpostList[i].ironPriceT.text = Mathf.CeilToInt(outpostList[i].ironPrice).ToString() + "G";
 		}
 	}
@@ -255,12 +284,12 @@ public class ShopSystem : MonoBehaviour
 
 	void Price()
 	{
-		fishPrice = (150 / town.GetComponent<Town>().fish) * 2;
-		lumberPrice = (100 / town.GetComponent<Town>().lumber) * 3;
-		ironPrice = (50 / town.GetComponent<Town>().iron) * 4;
-		wheatPrice = (200 / town.GetComponent<Town>().wheat);
+		fishPrice = (150 - town.GetComponent<Town>().fish) * 0.2f;
+		lumberPrice = (100 - town.GetComponent<Town>().lumber) * 0.3f;
+		ironPrice = (50 - town.GetComponent<Town>().iron) * 0.4f;
+		wheatPrice = (200 - town.GetComponent<Town>().wheat) * 0.1f;
 
-		uFish.text =  town.GetComponent<Town>().fish.ToString();
+		uFish.text = town.GetComponent<Town>().fish.ToString();
 		uLumber.text = town.GetComponent<Town>().lumber.ToString();
 		UIron.text = town.GetComponent<Town>().iron.ToString();
 		uGold.text = town.GetComponent<Town>().wheat.ToString();
@@ -270,6 +299,7 @@ public class ShopSystem : MonoBehaviour
 		priceI.text = Mathf.CeilToInt (ironPrice).ToString() + "G";
 		priceG.text = Mathf.CeilToInt (wheatPrice).ToString() + "G";
 	}
+
 
 	public void BuyLumber()
 	{
@@ -303,7 +333,10 @@ public class ShopSystem : MonoBehaviour
 	}
 	public void BuyGold()
 	{
-		town.GetComponent<Town>().wheat -= 1;
+		if (scene == 1)
+		{
+			town.GetComponent<Town>().wheat -= 1;
+		}
 		questGiver.GetComponent<MultipleChoice>().goldN -= Mathf.CeilToInt (wheatPrice);
 		metrics.GetComponent<Metrics>().goldNeg -= Mathf.CeilToInt (wheatPrice);
 		metrics.GetComponent<Metrics>().buyGoods += 1;
@@ -350,7 +383,10 @@ public class ShopSystem : MonoBehaviour
 		questGiver.GetComponent<MultipleChoice> ().goldN += Mathf.CeilToInt (wheatPrice);
 		metrics.GetComponent<Metrics>().goldPos += Mathf.CeilToInt (wheatPrice);
 		metrics.GetComponent<Metrics>().sellGoods += 1;
-		town.GetComponent<Town> ().wheat += 1;
+		if (scene == 1)
+		{
+			town.GetComponent<Town> ().wheat += 1;
+		}
 		CargoTextAdd ();
 		MercsLeave();
 	}

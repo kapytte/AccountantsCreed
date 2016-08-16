@@ -34,6 +34,11 @@ public class Save : MonoBehaviour
 		}
 	}
 
+	public void Tutorial()
+	{
+		SceneManager.LoadScene(2);
+	}
+
 	public void LoadGame()
 	{
 		choice.GetComponent<MultipleChoice> ().goldN = PlayerPrefs.GetInt ("PlayerGold");

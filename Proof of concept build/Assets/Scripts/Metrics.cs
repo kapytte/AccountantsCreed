@@ -15,13 +15,11 @@ public class Metrics : MonoBehaviour
 	void Start()
 	{
 		DontDestroyOnLoad(gameObject);
-		StartCoroutine(PreviewScreen());
 
 	}
 
-	IEnumerator PreviewScreen()
+	public void PreviewScreen()
 	{
-		yield return new WaitForSeconds(1);
 		SceneManager.LoadScene(1);
 	}
 		
@@ -38,7 +36,6 @@ public class Metrics : MonoBehaviour
 
 
 	}
-
 
 
 	void GameStats()

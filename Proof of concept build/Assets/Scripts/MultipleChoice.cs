@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.Analytics;
+using UnityEngine.SceneManagement;
 
 
 //Questions in this section pulled from the Basic accounting test located at www.myaccountingcourse.com/accounting-basic/multiple-choice
@@ -53,6 +54,18 @@ public class MultipleChoice : MonoBehaviour
 
 	void Update()
 	{
+		if (SceneManager.GetActiveScene().buildIndex == 1)
+		{
+			MainLevel();
+		}
+		if (SceneManager.GetActiveScene().buildIndex == 2)
+		{
+			TutorialScene();
+		}
+	}
+
+	void MainLevel()
+	{
 		town = shops.GetComponent<ShopSystem>().town;
 
 		if (metrics == null)
@@ -61,7 +74,7 @@ public class MultipleChoice : MonoBehaviour
 		}
 
 		//checks for mouse over quest icons
-	
+
 		if (prevN != 0)
 		{
 			Preview();
@@ -90,6 +103,12 @@ public class MultipleChoice : MonoBehaviour
 
 		CanQuest();
 	}
+
+	void TutorialScene()
+	{
+		
+	}
+
 
 	void WindowTimer()
 	{
