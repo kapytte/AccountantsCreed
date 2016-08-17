@@ -8,7 +8,9 @@ public class CameraMovement : MonoBehaviour
 	public int smooth;
 	public Transform mainCam, caravan, canvas;
 
-	public bool LockedCamera;
+	public float leftB, rightB, frontB, backB;
+
+	public bool LockedCamera, tutorial;
 
 	public Vector3 startPos, startRot;
 
@@ -34,14 +36,24 @@ public class CameraMovement : MonoBehaviour
 	{
 		if (canvas.gameObject.activeInHierarchy == false)
 		{
-			if (LockedCamera)
+			if (LockedCamera && !tutorial)
+			{
 				FreeMovement ();
+				AutoAdjust();
+			}
 			else
+			{
 				Follow ();
+			}
 
 			CameraSwitch ();
 
 		}
+	}
+
+	public void Tutorial()
+	{
+		tutorial = !tutorial;
 	}
 
 	void CameraSwitch()
@@ -61,6 +73,30 @@ public class CameraMovement : MonoBehaviour
 		}
 	}
 
+	void AutoAdjust()
+	{
+		if (transform.position.x < leftB)
+		{
+			transform.position = new Vector3(leftB, transform.position.y, transform.position.z);
+		}
+
+		if (transform.position.x > rightB)
+		{
+			transform.position = new Vector3(rightB, transform.position.y, transform.position.z);
+		}
+
+		if (transform.position.z > frontB)
+		{
+			transform.position = new Vector3(transform.position.x, transform.position.y, frontB);
+		}
+
+		if (transform.position.z < backB)
+		{
+			transform.position = new Vector3(transform.position.x, transform.position.y, backB);
+		}
+
+	}
+
 	//sets camera to starting location on load
 	void StartLocation()
 	{
@@ -70,19 +106,20 @@ public class CameraMovement : MonoBehaviour
 
 	void FreeMovement()
 	{
+		
 		if (Input.GetKey(KeyCode.A) || Input.mousePosition.x < (Screen.width * 0.1f))
 		{
 			mainCam.Translate(Vector3.left * smooth * Time.deltaTime, Space.World);
 		}
 
-		if (Input.GetKey(KeyCode.W) || Input.mousePosition.y > (Screen.height * 0.9f))
-		{
-			mainCam.Translate(Vector3.forward * smooth * Time.deltaTime, Space.World);
-		}
-
 		if (Input.GetKey(KeyCode.D) || Input.mousePosition.x > (Screen.width * 0.9f))
 		{
 			mainCam.Translate(Vector3.right * smooth * Time.deltaTime, Space.World);
+		}
+
+		if (Input.GetKey(KeyCode.W) || Input.mousePosition.y > (Screen.height * 0.9f))
+		{
+			mainCam.Translate(Vector3.forward * smooth * Time.deltaTime, Space.World);
 		}
 
 		if (Input.GetKey(KeyCode.S) || Input.mousePosition.y < (Screen.height * 0.1f))

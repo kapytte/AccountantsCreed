@@ -21,19 +21,12 @@ public class Hex : MonoBehaviour
 	// Update is called once per frame
 	void Start () 
 	{
-		
-
 		newTile = Instantiate(tile, transform.position, Quaternion.Euler(-90, 0, 0)) as GameObject;
 		newTile.transform.parent = gameObject.transform;
 
 		RaycastHit h;
 
 		Physics.Raycast(center, transform.up, out h, 1f);
-
-
-
-
-	
 	}
 		
 

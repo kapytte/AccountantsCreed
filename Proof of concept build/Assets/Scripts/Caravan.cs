@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 
 
@@ -22,7 +23,7 @@ public class Caravan : MonoBehaviour
 	//inputs for Hazard events
 	public GameObject ambush, hazard;
 	public Text randDEF, randATK, outcomeA, resultA, outcomeH, resultH;
-	public int def, newDEF, bandit;
+	public int def, newDEF, bandit, scene;
 	public bool inEvent;
 
 	//input for treasure
@@ -41,23 +42,24 @@ public class Caravan : MonoBehaviour
 	// Use this for initialization
 	void Start () 
 	{
-		CheckTiles ();
-
 		def = 10;
 		defT.text = def.ToString();
 
 		danger = 1;
 
 		metrics = GameObject.Find("Metrics");
+
+		scene = SceneManager.GetActiveScene().buildIndex;
 	}
 	
 	// Update is called once per frame
 	void Update () 
 	{
-
+		
 		WhereAmI ();
 
-		if (GetComponent<NavMeshAgent> ().velocity.magnitude == 0)
+
+		if (GetComponent<NavMeshAgent> ().velocity.magnitude == 0 && scene == 1)
 		{
 			CheckTiles ();
 		}
@@ -105,50 +107,64 @@ public class Caravan : MonoBehaviour
 	void OnTriggerEnter(Collider c)
 	{
 
-		if (c.name == "town")
+		if (scene == 1)
 		{
-			shops.GetComponent<ShopSystem>().town = c.gameObject;
-			townScreen.SetActive(true);
-			shops.GetComponent<ShopSystem>().MercsLeave();
+			if (c.name == "town")
+			{
+				shops.GetComponent<ShopSystem>().town = c.gameObject;
+				townScreen.SetActive(true);
+				shops.GetComponent<ShopSystem>().MercsLeave();
+			}
+
+			else if (c.gameObject == currentTile) 
+			{
+				i = Random.Range (1, 101);
+
+				a = currentTile.GetComponent<Tile>().ambushChance;
+				b = currentTile.GetComponent<Tile>().treasureChance + a;
+				d = currentTile.GetComponent<Tile>().hazardChance + b;
+
+				if (i <= a) 
+				{
+					tileEvent = tileEventList.ambush;
+					Ambush ();
+				}
+				else if (i > a && i <= b && shops.GetComponent<ShopSystem> ().cargo.Count < 10) 
+				{
+					tileEvent = tileEventList.treasure;
+					Treasure ();
+				}
+				else if (i > b && i <= d && shops.GetComponent<ShopSystem> ().cargo.Count > 0) 
+				{
+					tileEvent = tileEventList.hazard;
+					Hazard();
+				}
+				else
+				{
+					tileEvent = tileEventList.none;
+				}
+
+				if (time.GetComponent<WorldTime>().camp.activeInHierarchy)
+				{
+					time.GetComponent<WorldTime>().camp.GetComponent<Button>().interactable = true;
+				}
+			}
 		}
 
-		else if (c.gameObject == currentTile) 
+		if (scene == 2)
 		{
-			i = Random.Range (1, 101);
-
-			a = currentTile.GetComponent<Tile>().ambushChance;
-			b = currentTile.GetComponent<Tile>().treasureChance + a;
-			d = currentTile.GetComponent<Tile>().hazardChance + b;
-
-			if (i <= a) 
+			if (c.name == "town")
 			{
-				tileEvent = tileEventList.ambush;
-				Ambush ();
-			}
-			else if (i > a && i <= b && shops.GetComponent<ShopSystem> ().cargo.Count < 10) 
-			{
-				tileEvent = tileEventList.treasure;
-				Treasure ();
-			}
-			else if (i > b && i <= d && shops.GetComponent<ShopSystem> ().cargo.Count > 0) 
-			{
-				tileEvent = tileEventList.hazard;
-				Hazard();
-			}
-			else
-			{
-				tileEvent = tileEventList.none;
+				shops.GetComponent<ShopSystem>().town = c.gameObject;
+				townScreen.SetActive(true);
+				def = 10;
 			}
 
-			if (time.GetComponent<WorldTime>().camp.activeInHierarchy)
-			{
-				time.GetComponent<WorldTime>().camp.GetComponent<Button>().interactable = true;
-			}
+			//c.GetComponent<Tile>().canMouseOver = false;
 		}
 			
 	}
 		
-
 
 	void OnDrawGizmos()
 	{
@@ -157,7 +173,7 @@ public class Caravan : MonoBehaviour
 
 	}
 
-	void Ambush()
+	public void Ambush()
 	{
 		ambush.SetActive(true);
 		InEvent ();
@@ -229,7 +245,7 @@ public class Caravan : MonoBehaviour
 		inEvent = !inEvent;
 	}
 
-	void Treasure()
+	public void Treasure()
 	{
 		treasure.SetActive(true);
 		InEvent ();
@@ -249,7 +265,7 @@ public class Caravan : MonoBehaviour
 			outcomeT.text = ("Found some Lumber");
 			outcomeT.color = darkGreen;
 		}
-		if (currentTile.name == "plain hill") 
+		if (currentTile.name == "quarry") 
 		{
 			shops.GetComponent<ShopSystem> ().cargo.Add (shops.GetComponent<ShopSystem>().iron);
 			outcomeT.text = ("Found some Iron");
@@ -266,7 +282,7 @@ public class Caravan : MonoBehaviour
 
 	}
 		
-	void Hazard() 
+	public void Hazard() 
 	{
 		hazard.SetActive(true);
 		InEvent ();
@@ -274,8 +290,15 @@ public class Caravan : MonoBehaviour
 		metrics.GetComponent<Metrics>().hazards += 1;
 
 		int j;
+		if (scene == 1)
+		{
+			j = Random.Range (0, shops.GetComponent<ShopSystem> ().cargo.Count-1);
+		}
+		else 
+		{
+			j = 1;
+		}
 
-		j = Random.Range (0, shops.GetComponent<ShopSystem> ().cargo.Count-1);
 		{
 			if (currentTile.name == "water") 
 			{
@@ -286,7 +309,7 @@ public class Caravan : MonoBehaviour
 			{
 				outcomeH.text = "These woods are a little too dark for comfort";
 			}
-			else if (currentTile.name == "plain hill") 
+			else if (currentTile.name == "quarry") 
 			{
 				outcomeH.text = "Venturing too close to a mine shaft has its consequences";
 			}

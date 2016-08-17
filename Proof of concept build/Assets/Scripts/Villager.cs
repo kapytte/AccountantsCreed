@@ -66,7 +66,7 @@ public class Villager : MonoBehaviour
 			jobType = "Miner";
 			foreach(GameObject c in town.GetComponent<Town>().resourceList)
 			{
-				if (c.name == "plain hill")
+				if (c.name == "quarry")
 				{
 					target = c.gameObject;
 					town.GetComponent<Town>().resourceList.Remove(c);
@@ -180,7 +180,7 @@ public class Villager : MonoBehaviour
 				if (i > 30)
 					fish ++;
 				break;
-			case "plain hill":
+			case "quarry":
 				if (i > 60)
 					iron ++;
 				break;

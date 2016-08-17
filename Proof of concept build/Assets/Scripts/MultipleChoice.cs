@@ -32,7 +32,7 @@ public class MultipleChoice : MonoBehaviour
 	public Button q1, q2, q3, q4, cont;
 	public Text preview, goldS, repS;
 	public Text question, buttonA, buttonB, buttonC, buttonD;
-	public int goldN, repN, maxQ, choiceQ, prevN, questGiver;
+	public int goldN, repN, maxQ, choiceQ, prevN, questGiver, repReward;
 	public bool questActive, startTimer;
 	public RawImage questionArea;
 	public string decision;
@@ -46,10 +46,13 @@ public class MultipleChoice : MonoBehaviour
 
 	void Start ()
 	{
-		//spawns quests at start
-		GenerateQuest();
+		if (SceneManager.GetActiveScene().buildIndex == 1)
+		{
+			GenerateQuest();
 
-		metrics = GameObject.Find("Metrics");
+			metrics = GameObject.Find("Metrics");
+		}//spawns quests at start
+
 	}
 
 	void Update()
@@ -58,10 +61,12 @@ public class MultipleChoice : MonoBehaviour
 		{
 			MainLevel();
 		}
+
 		if (SceneManager.GetActiveScene().buildIndex == 2)
 		{
 			TutorialScene();
 		}
+
 	}
 
 	void MainLevel()
@@ -106,7 +111,19 @@ public class MultipleChoice : MonoBehaviour
 
 	void TutorialScene()
 	{
-		
+		goldS.text = goldN.ToString();
+		repS.text = repN.ToString();
+
+		if (prevN != 0)
+		{
+			Preview();
+		}
+
+		//ensures reputation does not go below 0
+		if (repN <=0)
+		{
+			repN = 0;
+		}
 	}
 
 
@@ -120,6 +137,9 @@ public class MultipleChoice : MonoBehaviour
 	{
 		//ensures preview window is null
 		preview.text = "";
+
+		//creates temporary reward value
+		repReward = lvl1Quest[randomDraw[choiceQ-1]].reputation;
 
 		startTimer = true;
 		questActive = true;
@@ -152,6 +172,8 @@ public class MultipleChoice : MonoBehaviour
 		
 	public void Hint()
 	{
+		repReward = 0;
+
 		int i = lvl1Quest [randomDraw [choiceQ - 1]].PageNum;
 
 		int j = Mathf.CeilToInt (i / 2);
@@ -196,10 +218,10 @@ public class MultipleChoice : MonoBehaviour
 		//checks answer against template, if true..
 		if (decision == lvl1Quest[randomDraw[choiceQ-1]].answer)
 		{
-			//show green text and add gold & reputation 
+			//show green text and add reputation 
 			question.color = Color.green;
 			question.text = "Good Advice";
-			repN += lvl1Quest[randomDraw[choiceQ-1]].reputation;
+			repN += repReward;
 			metrics.GetComponent<Metrics>().questionsRight += 1;
 		}
 
@@ -275,8 +297,8 @@ public class MultipleChoice : MonoBehaviour
 	void Preview()
 	{
 		preview.text = 
-			lvl1Quest[randomDraw[prevN-1]].topic + "\n" + "\n" + "Page " + 
-			lvl1Quest[randomDraw[prevN-1]].PageNum + "\n" + "\n" + "Cred " + 
+			lvl1Quest[randomDraw[prevN-1]].topic + "\n" + "\n" + "Book Page " + 
+			lvl1Quest[randomDraw[prevN-1]].PageNum + "\n" + "\n" + "Integrity " + 
 			lvl1Quest[randomDraw[prevN-1]].reputation;
 
 //		//checks value thrown to this script by button

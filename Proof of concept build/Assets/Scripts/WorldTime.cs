@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 public class WorldTime : MonoBehaviour
 {
@@ -122,7 +123,10 @@ public class WorldTime : MonoBehaviour
 				sun.GetComponentInChildren<Light>().enabled = false;
 				caravan.GetComponent<Caravan>().danger = 2;
 				day = false;
-				camp.SetActive(true);
+				if (SceneManager.GetActiveScene().buildIndex == 1)
+				{
+					camp.SetActive(true);
+				}
 			}
 
 			if (h == 11 && am == false) 

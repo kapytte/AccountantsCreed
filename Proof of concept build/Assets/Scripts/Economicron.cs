@@ -173,7 +173,10 @@ public class Economicron : MonoBehaviour
 
 	IEnumerator Waiting()
 	{
-		
+		goLeft.interactable = false;
+		goRight.interactable = false;
+		closeButton.interactable = false;
+
 		yield return new WaitWhile(() => running == true);
 		Cursor.visible = false;
 

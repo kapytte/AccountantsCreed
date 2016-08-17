@@ -135,7 +135,7 @@ public class Tile : MonoBehaviour
 			if (c >=15 &&  c < 25)
 			{
 				GetComponent<Renderer>().material.color = Color.grey;
-				gameObject.name = "plain hill";
+				gameObject.name = "quarry";
 				type = "iron";
 				resource = Random.Range (50,100);
 				travelTime = 2;
@@ -196,8 +196,10 @@ public class Tile : MonoBehaviour
 
 	void OnMouseExit()
 	{
-
-		prev.GetComponent<Text> ().text = null;
+		if (canMouseOver == true)
+		{
+			prev.GetComponent<Text> ().text = null;
+		}
 	}
 
 
@@ -223,7 +225,7 @@ public class Tile : MonoBehaviour
 			else
 			{
 				int d = caravan.GetComponent<Caravan>().danger;
-				prev.GetComponent<Text> ().text = gameObject.name + "\n" + "\n" + "Ambush: " + ambushMod + "\n" + "Item Find: " + treasureMod + "\n" + "Hazard: " + hazardMod;
+				prev.GetComponent<Text> ().text = gameObject.name + "\n" + "\n" + "Ambush: " + ambushMod + "\n" + "Item: " + treasureMod + "\n" + "Hazard: " + hazardMod;
 			}
 
 			if (Input.GetMouseButton (0))

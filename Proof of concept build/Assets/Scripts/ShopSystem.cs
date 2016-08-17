@@ -129,21 +129,42 @@ public class ShopSystem : MonoBehaviour
 
 	void TutorialFunctions()
 	{
-		fishPrice = outpostList[outpostNum].fishPrice;
-		lumberPrice = outpostList[outpostNum].lumberPrice;
-		ironPrice = outpostList[outpostNum].ironPrice;
-		wheatPrice = outpostList[outpostNum].wheatPrice;
+		if (market.isActiveAndEnabled)
+		{
+			fishPrice = outpostList[outpostNum].fishPrice;
+			lumberPrice = outpostList[outpostNum].lumberPrice;
+			ironPrice = outpostList[outpostNum].ironPrice;
+			wheatPrice = outpostList[outpostNum].wheatPrice;
 
-		uFish.text = (Mathf.Round(150 - (fishPrice / .1f))).ToString();
-		uLumber.text = (Mathf.Round(100 - (lumberPrice / 0.2f))).ToString();
-		UIron.text = (Mathf.Round(50 - (ironPrice / 0.6f))).ToString();
-		uGold.text = (Mathf.Round(200 - (wheatPrice / 0.05f))).ToString();
+			uFish.text = (Mathf.Round(150 - (fishPrice / .1f))).ToString();
+			uLumber.text = (Mathf.Round(100 - (lumberPrice / 0.2f))).ToString();
+			UIron.text = (Mathf.Round(50 - (ironPrice / 0.6f))).ToString();
+			uGold.text = (Mathf.Round(200 - (wheatPrice / 0.05f))).ToString();
 
-		priceF.text = Mathf.CeilToInt (fishPrice).ToString() + "G";
-		priceL.text = Mathf.CeilToInt (lumberPrice).ToString() + "G";
-		priceI.text = Mathf.CeilToInt (ironPrice).ToString() + "G";
-		priceG.text = Mathf.CeilToInt (wheatPrice).ToString() + "G";
+			priceF.text = Mathf.CeilToInt (fishPrice).ToString() + "G";
+			priceL.text = Mathf.CeilToInt (lumberPrice).ToString() + "G";
+			priceI.text = Mathf.CeilToInt (ironPrice).ToString() + "G";
+			priceG.text = Mathf.CeilToInt (wheatPrice).ToString() + "G";
+		}
+		if (outpost.isActiveAndEnabled)
+		{
+			for (int i = 0; i < outpostList.Count; i++)
+			{
+				outpostList[i].wheatPriceT.text = Mathf.CeilToInt(outpostList[i].wheatPrice).ToString() + "G";
 
+				outpostList[i].fishPriceT.text = Mathf.CeilToInt(outpostList[i].fishPrice).ToString() + "G";
+
+				outpostList[i].lumberPriceT.text = Mathf.CeilToInt(outpostList[i].lumberPrice).ToString() + "G";
+
+				outpostList[i].ironPriceT.text = Mathf.CeilToInt(outpostList[i].ironPrice).ToString() + "G";
+			}
+
+		}
+		if (mercenaries.isActiveAndEnabled)
+		{
+			mercCost = 0;
+			mercCostT.text = mercCost.ToString();
+		}
 	}
 
 	public void CargoTextAdd()
@@ -336,13 +357,14 @@ public class ShopSystem : MonoBehaviour
 		if (scene == 1)
 		{
 			town.GetComponent<Town>().wheat -= 1;
+			MercsLeave();
 		}
 		questGiver.GetComponent<MultipleChoice>().goldN -= Mathf.CeilToInt (wheatPrice);
 		metrics.GetComponent<Metrics>().goldNeg -= Mathf.CeilToInt (wheatPrice);
 		metrics.GetComponent<Metrics>().buyGoods += 1;
 		cargo.Add(wheat);
 		CargoTextAdd ();
-		MercsLeave();
+
 	}
 
 	public void SellLumber()
