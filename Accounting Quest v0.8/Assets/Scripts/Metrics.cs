@@ -16,7 +16,7 @@ public class Metrics : MonoBehaviour
 	public int goldPos, goldNeg, goldCurrent, days, buyGoods, sellGoods, treasure, hazards, banditsPos, banditsNeg, questionsRight, questionsWrong, repeats; 
 	public string gameState;
 
-	public float time, i, t, a;
+	public float time, i, t, a, fadeDuration;
 
 	public bool starting;
 
@@ -29,18 +29,24 @@ public class Metrics : MonoBehaviour
 	{
 		DontDestroyOnLoad(gameObject);
 
-		if (SceneManager.GetActiveScene().buildIndex == 0)
-		{
+//		if (SceneManager.GetActiveScene().buildIndex == 0)
+//		{
 			StartCoroutine(WaitWhileFading());
 			starting = true;
-		}
+//		}
 
 
 	}
 
+
 	//keeps track of time and fades through intro scene
 	void Update()
 	{
+		if (fade == null)
+		{
+			fade = GameObject.Find ("Fade").GetComponentInChildren<RawImage> ();
+		}
+
 		a = Time.realtimeSinceStartup - time;
 
 		if (starting)
@@ -80,7 +86,6 @@ public class Metrics : MonoBehaviour
 	{
 		while (true)
 		{
-			print ("somg");
 			yield return new WaitWhile(() => speakers.isPlaying == true);
 
 			int i = Random.Range(0, tunes.Count);
@@ -101,14 +106,17 @@ public class Metrics : MonoBehaviour
 	//auto-fading function
 	IEnumerator WaitWhileFading()
 	{
-		yield return new WaitWhile(() => i > -0.5f);	
-		t = .7f;
+		yield return new WaitWhile(() => i > - fadeDuration);	
+		t = -t;
 
-		yield return new WaitWhile(() => i < 1);
+		yield return new WaitWhile(() => i < fadeDuration);
+		t = -t;
+
 		starting = false;
-		SceneManager.LoadScene(3);
 
 		StartCoroutine (music());
+
+		SceneManager.LoadScene(3);
 	}
 
 	//gets stats every 5 minutes in case of web build

@@ -141,13 +141,15 @@ public class WorldTime : MonoBehaviour
 				days -= 1;
 				metrics.GetComponent<Metrics>().days += 1;
 				daysT.text = days.ToString ();
+
+				if (days == 0) 
+				{
+					Day0();
+
+				}
 			}
 
-			if (days == 0) 
-			{
-				Day0();
 
-			}
 
 			if (roster.Capacity > 0)
 			{		
@@ -235,6 +237,7 @@ public class WorldTime : MonoBehaviour
 	void Day0()
 	{
 		choice.GetComponent<MultipleChoice> ().goldN -= debt;
+
 		if (choice.GetComponent<MultipleChoice> ().goldN > 0) 
 		{
 			debt += 10;

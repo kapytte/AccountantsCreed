@@ -145,7 +145,7 @@ public class Villager : MonoBehaviour
 			foreach(RaycastHit c in hexes)
 			{
 				
-				if (Vector3.Distance(transform.position, c.transform.position) < 2 && c.collider.tag == "Hex" && c.collider.gameObject != nextHex)
+				if (Vector3.Distance(transform.position, c.transform.position) < 2 && c.collider.GetComponentInChildren<Tile>() != null && c.collider.gameObject != nextHex)
 				{
 					
 					nextHex = c.collider.gameObject;
