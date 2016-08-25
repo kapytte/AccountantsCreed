@@ -106,17 +106,40 @@ public class Metrics : MonoBehaviour
 	//auto-fading function
 	IEnumerator WaitWhileFading()
 	{
-		yield return new WaitWhile(() => i > - fadeDuration);	
-		t = -t;
+		
+		if (SceneManager.GetActiveScene().buildIndex == 0)
+		{
+			yield return new WaitWhile(() => i > - fadeDuration);	
+			t = -t;
 
-		yield return new WaitWhile(() => i < fadeDuration);
-		t = -t;
+			yield return new WaitWhile(() => i < fadeDuration);
+			t = -t;
 
-		starting = false;
+			StartCoroutine (music());
 
-		StartCoroutine (music());
+			SceneManager.LoadScene(3);
 
-		SceneManager.LoadScene(3);
+			starting = false;
+		}
+
+		if (SceneManager.GetActiveScene().buildIndex == 3)
+		{
+			starting = true;
+			yield return new WaitWhile(() => i < fadeDuration);
+			t = -t;
+
+			SceneManager.LoadScene(1);
+
+			yield return new WaitWhile(() => i > - fadeDuration);	
+			t = -t;
+			starting = false;
+		}
+			
+	}
+
+	public void FadeOut()
+	{
+		StartCoroutine(WaitWhileFading());
 	}
 
 	//gets stats every 5 minutes in case of web build

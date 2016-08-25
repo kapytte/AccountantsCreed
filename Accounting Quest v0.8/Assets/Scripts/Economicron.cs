@@ -11,29 +11,37 @@ public class EconPages
 	public Texture fade1, fade2, fade3, text;
 }
 
-
-
 public class Economicron : MonoBehaviour 
 {
 	public List<EconPages> bookPages;
 	public enum syllabus {one, two, three, four};
 	public syllabus topic;
 
+	public enum bookStage {fadeIn, fadeOut, flipBook, fadeText, none}
+	public bookStage bookSequence;
 
+	public Light bookLight; 
+	public Camera mainCam, bookCam;
 	public Button goLeft, goRight, closeButton;
-	public RawImage canv1, canv2, canv3, canv4, leftPage, rightPage;
-	public GameObject content;
-	public float a, b, c, d, e, g, i, openSpeed;
+	public RawImage canv1, canv2, canv3, canv4, fadeScreen1, fadeScreen2;
+	public GameObject content, bookHinge, mainCanvas;
+	public float a, b, c, d, e, g, i, openSpeed, fadeSpeed;
 	public int h, currentPage, page;
 	public bool one, running, open, close, closing;
+	public Quaternion pageOpenPos, pageClosedPos;
+
 
 	public float speed;
 
 	//sets page 1 of book and start transform of pages
 	void Start()
 	{
-		leftPage.rectTransform.localScale = new Vector2(0,13.5f);
-		rightPage.rectTransform.localScale = new Vector2(0,13.5f);
+		bookLight.enabled = false;
+
+		pageOpenPos = new Quaternion(-0.4f, -0.5f, -0.5f, 0.4f);
+		pageClosedPos = new Quaternion(-0.6f, 0.4f, 0.5f, 0.6f);
+
+		bookHinge.transform.rotation = pageClosedPos;
 
 		currentPage = 0;
 
@@ -70,13 +78,14 @@ public class Economicron : MonoBehaviour
 
 		if (open)
 		{
-			OpenBook();
+			OpeningProcedure();
 		}
 
 		if (close)
 		{
-			CloseBook();
+			ClosingProcedure();
 		}
+
 	}
 
 
@@ -84,34 +93,131 @@ public class Economicron : MonoBehaviour
 	//opens the book by expanding the pages and fading in page 1
 	public void OpenBook()
 	{
+		i = 0;
+		StartCoroutine (OpeningBookControl());
+
+	}
+
+	void OpeningProcedure()
+	{
+		
+
+		if (bookSequence == bookStage.fadeOut)
+		{
+			i += fadeSpeed * Time.deltaTime;
+			fadeScreen1.color = new Color(0,0,0,i);
+		}
+
+		else if (bookSequence == bookStage.fadeIn)
+		{
+			i -= fadeSpeed * Time.deltaTime;
+			fadeScreen2.color = new Color(0,0,0,i);
+		}
+
+		else if (bookSequence == bookStage.flipBook)
+		{
+			i += openSpeed * Time.deltaTime;
+			bookHinge.transform.rotation = Quaternion.Lerp(pageClosedPos, pageOpenPos, i);
+		}
+
+	}
+
+	IEnumerator OpeningBookControl()
+	{
 		goLeft.interactable = false;
 		goRight.interactable = true;
 
+		//fade out main screen
+		Cursor.visible = false;
+		open = true;
+		bookSequence = bookStage.fadeOut;
+		yield return new WaitWhile(() => i < 1);
+		bookLight.enabled = true;
+		//posess book camrera & fade in book screen
+		bookCam.enabled = true;
+		mainCam.enabled = false;
+		mainCanvas.SetActive(false);
+		bookSequence = bookStage.fadeIn;
+		yield return new WaitWhile(() => i > 0);
+		//open book
+		bookSequence = bookStage.flipBook;
+		yield return new WaitForSeconds(1);
+		open = false;
+		bookSequence = bookStage.none;
+		//fade in text
 		canv1.texture = bookPages[currentPage].fade1;
 		canv2.texture = bookPages[currentPage].fade2;
 		canv3.texture = bookPages[currentPage].fade3;
 		canv4.texture = bookPages[currentPage].text;
 
-		i += openSpeed * Time.deltaTime;
 
-		if (i < 20)
+		//end
+		closeButton.enabled = true;
+
+		running = true;
+		yield return new WaitWhile(() => running == true);
+
+		Cursor.visible = true;
+		open = false;
+	}
+
+	void ClosingProcedure()
+	{
+
+
+		if (bookSequence == bookStage.fadeOut)
 		{
-			Cursor.visible = false;
-			open = true;
-			leftPage.rectTransform.localScale = new Vector2(i,13.5f);
-			rightPage.rectTransform.localScale = new Vector2(i,13.5f);
+			i += fadeSpeed * Time.deltaTime;
+			fadeScreen2.color = new Color(0,0,0,i);
 		}
-		else 
-		{
-			closeButton.enabled = true;
 
-			running = true;
-			Cursor.visible = true;
-			open = false;
+		else if (bookSequence == bookStage.fadeIn)
+		{
+			i -= fadeSpeed * Time.deltaTime;
+			fadeScreen1.color = new Color(0,0,0,i);
+		}
+
+		else if (bookSequence == bookStage.flipBook)
+		{
+			i += openSpeed * Time.deltaTime;
+			bookHinge.transform.rotation = Quaternion.Lerp(pageOpenPos, pageClosedPos, i);
 		}
 
 	}
 
+	IEnumerator ClosingBookControl()
+	{
+		i = 0;
+		//fade out main screen
+		Cursor.visible = false;
+		running = true;
+
+		yield return new WaitWhile(() => running == true);
+
+		close = true;
+		bookSequence = bookStage.flipBook;
+	
+		yield return new WaitForSeconds(1);
+		bookSequence = bookStage.fadeOut;
+
+		yield return new WaitWhile(() => i < 1);
+		//posess book camrera & fade in book screen
+
+		bookLight.enabled = false;
+		bookCam.enabled = false;
+		mainCam.enabled = true;
+		mainCanvas.SetActive(true);
+
+		bookSequence = bookStage.fadeIn;
+		yield return new WaitWhile(() => i > 0);
+		//open book
+		
+		close = false;
+		bookSequence = bookStage.none;
+		currentPage = 0;
+
+		Cursor.visible = true;
+	}
 
 	//closes the book by fading out the page and redcing page size
 	void CloseBook()
@@ -125,8 +231,10 @@ public class Economicron : MonoBehaviour
 
 			Cursor.visible = false;
 			close = true;
-			leftPage.rectTransform.localScale = new Vector2(i,13.5f);
-			rightPage.rectTransform.localScale = new Vector2(i,13.5f);
+
+
+//			leftPage.rectTransform.localScale = new Vector2(i,13.5f);
+//			rightPage.rectTransform.localScale = new Vector2(i,13.5f);
 		}
 		else 
 		{
@@ -161,16 +269,7 @@ public class Economicron : MonoBehaviour
 	//waits till page has faded, then closes the book
 	public void BeginClose()
 	{
-		StartCoroutine(FadeClose());
-
-	}
-	IEnumerator FadeClose()
-	{
-		running = true;
-
-		yield return new WaitWhile(() => running == true);
-
-		CloseBook();
+		StartCoroutine(ClosingBookControl());
 
 	}
 
